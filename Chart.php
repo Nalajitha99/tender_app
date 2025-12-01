@@ -24,7 +24,7 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) >
 }
 
 $_SESSION['LAST_ACTIVITY'] = time();
-$username = $_SESSION['username'];
+$userName = $_SESSION['username'];
 
 // -------------------------------
 // HANDLE FILTERS
@@ -110,17 +110,17 @@ $userResult = $conn->query("SELECT uname, department FROM users ORDER BY uname A
         <img src="images/footerLogo.png" alt="Powernet Logo" class="navbar-brand" style="height: 50px;">
         <div class="collapse navbar-collapse" id="navbarNav">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" href="Chart.php" style="color:blue;font-weight:bold;">Dashboard</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="OngoingTenderTable.php" style="color:green;font-weight:bold;">Ongoing Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="SubmittedTenderTable.php" style="color:orange;font-weight:bold;">Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="UncompletedTenderTable.php" style="color:red;font-weight:bold;">Not Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="AwardedTenderTable.php" style="color:navy;font-weight:bold;">Awarded Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <?php if($username=="Admin") { ?>
-                    <li class="nav-item"><a class="nav-link active" href="SalesPersonList.php" style="color:purple;font-weight:bold;">Sales Person List</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <li class="nav-item"><a class="nav-link active" href="AddSalesPerson.php" style="color:navy;font-weight:bold;">Add Sales Person </a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item" style="background-color:rgb(166, 166, 166);border-radius:10px"><a class="nav-link active" href="Chart.php" style="font-weight:bold;">Dashboard</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="OngoingTenderTable.php" style="font-weight:bold;">Ongoing Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="SubmittedTenderTable.php" style="font-weight:bold;">Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="UncompletedTenderTable.php" style="font-weight:bold;">Not Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="AwardedTenderTable.php" style="font-weight:bold;">Awarded Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <?php if($userName=="Admin") { ?>
+                    <li class="nav-item"><a class="nav-link active" href="SalesPersonList.php" style="font-weight:bold;">Sales Person List</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <li class="nav-item"><a class="nav-link active" href="AddSalesPerson.php" style="font-weight:bold;">Add Sales Person </a></li>&nbsp;&nbsp;&nbsp;&nbsp;
                 <?php } ?>
             </ul>
-            <span class="navbar-text me-3">Logged in as: <?php echo htmlspecialchars($username); ?></span>
+            <span class="navbar-text me-3">Logged in as: <?php echo htmlspecialchars($userName); ?></span>
             <a href="logout.php" class="btn btn-outline-dark btn-sm">Logout</a>
         </div>
     </div>
@@ -153,6 +153,13 @@ $userResult = $conn->query("SELECT uname, department FROM users ORDER BY uname A
     <button class="btn btn-secondary btn-sm" onclick="clearFilters()">Clear Filter</button>&nbsp;&nbsp;
     <button class="btn btn-success btn-sm" onclick="exportPDF()">Print / PDF</button>
 </div>
+
+<div class="container text-end mb-3">
+<?php if ($userName == "Prasadini" || $userName == "Admin") { ?>
+    <a href="AddTender.php" class="btn btn-danger">Add New Tender</a>
+<?php } ?>
+</div>
+
 
 <!-- FILTER SUMMARY -->
 <div class="filter-summary">

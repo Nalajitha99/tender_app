@@ -31,7 +31,7 @@ $result = $conn->query($query);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        body { background: #f7f7f7; }
+        body { background: #f7f7f7; font-family: Arial, sans-serif; }
         .table-container {
             width: 90%;
             margin: auto;
@@ -52,12 +52,13 @@ $result = $conn->query($query);
         <img src="images/footerLogo.png" style="height:50px;" class="navbar-brand">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link active" href="Chart.php" style="color:blue;font-weight:bold;">Dashboard</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="OngoingTenderTable.php" style="color:green;font-weight:bold;">Ongoing Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="SubmittedTenderTable.php" style="color:orange;font-weight:bold;">Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="UncompletedTenderTable.php" style="color:red;font-weight:bold;">Not Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="SalesPersonList.php" style="color:purple;font-weight:bold;">Sales Person List</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="AddSalesPerson.php" style="color:navy;font-weight:bold;">Add Sales Person </a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="Chart.php" style="font-weight:bold;">Dashboard</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="OngoingTenderTable.php" style="font-weight:bold;">Ongoing Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="SubmittedTenderTable.php" style="font-weight:bold;">Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="UncompletedTenderTable.php" style="font-weight:bold;">Not Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="AwardedTenderTable.php" style="font-weight:bold;">Awarded Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item" style="background-color:rgb(166, 166, 166);border-radius:10px"><a class="nav-link active" href="SalesPersonList.php" style="font-weight:bold;">Sales Person List</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="AddSalesPerson.php" style="font-weight:bold;">Add Sales Person </a></li>&nbsp;&nbsp;&nbsp;&nbsp;
             </ul>
             <span class="navbar-text me-3">Logged in as: <?php echo $username; ?></span>
             <a href="logout.php" class="btn btn-outline-dark btn-sm">Logout</a>

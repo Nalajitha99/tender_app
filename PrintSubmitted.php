@@ -32,10 +32,10 @@ if ($userFilter !== "") $where .= " AND assignedBy LIKE '%" . $conn->real_escape
 if ($startDate !== "" && $endDate !== "") {
     $start = $conn->real_escape_string($startDate);
     $end   = $conn->real_escape_string($endDate);
-    $where .= " AND closingDate BETWEEN '$start' AND '$end'";
+    $where .= " AND assignedDate BETWEEN '$start' AND '$end'";
 }
 
-$sql = "SELECT organization, location, tenderNo, bidSecurity, assignedBy, closingDate
+$sql = "SELECT organization, location, tenderNo, bidSecurity, assignedBy, closingDate, assignedDate
         FROM tenders
         $where
         ORDER BY closingDate DESC";

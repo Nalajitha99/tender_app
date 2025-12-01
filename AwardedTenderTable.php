@@ -59,11 +59,11 @@ $endDate = isset($_GET['endDate']) ? $_GET['endDate'] : '';
         </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" href="Chart.php" style="color:blue;font-weight:bold;">Dashboard</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="OngoingTenderTable.php" style="color:green;font-weight:bold;">Ongoing Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="SubmittedTenderTable.php" style="color:orange;font-weight:bold;">Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="UncompletedTenderTable.php" style="color:red;font-weight:bold;">Not Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="AwardedTenderTable.php" style="color:navy;font-weight:bold;">Awarded Tenders</a></li>
+                <li class="nav-item"><a class="nav-link active" href="Chart.php" style="font-weight:bold;">Dashboard</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="OngoingTenderTable.php" style="font-weight:bold;">Ongoing Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="SubmittedTenderTable.php" style="font-weight:bold;">Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="UncompletedTenderTable.php" style="font-weight:bold;">Not Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item" style="background-color:rgb(166, 166, 166);border-radius:10px"><a class="nav-link active" href="AwardedTenderTable.php" style="font-weight:bold;">Awarded Tenders</a></li>
             </ul>
             <span class="navbar-text me-3">Logged in as: <?php echo htmlspecialchars($userName); ?></span>
             <a href="logout.php" class="btn btn-outline-dark btn-sm">Logout</a>
@@ -153,11 +153,6 @@ function printPDF(){
 
 </div>
 
-<div class="container text-end mb-3">
-<?php if ($userName == "Prasadini" || $userName == "Admin") { ?>
-    <a href="AddTender.php" class="btn btn-primary">Add New Tender</a>
-<?php } ?>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
