@@ -82,6 +82,7 @@ if (isset($_POST['update'])) {
     $ourprice       = $_POST['ourPrice'];
     $readings       = $_POST['readings'];
     $awardStatus    = $_POST['awardStatus'];
+    $approveStatus  = $tender['approveStatus'];
 
 
 
@@ -110,7 +111,8 @@ if (isset($_POST['update'])) {
             l1price       = '$l1price',
             ourprice      = '$ourprice',
             readings      = '$readings',
-            awardStatus   = '$awardStatus'
+            awardStatus   = '$awardStatus',
+            approveStatus = '$approveStatus'
         WHERE id = '$id'";
 
     if ($conn->query($sqlUpdate)) {
@@ -140,7 +142,7 @@ if (isset($_POST['update'])) {
 
                 <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                     <div class="card-body p-4 p-md-5">
-                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-3">Update Tender</h3><hr><br>
+                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-3"><?php echo $tender['organization']; ?> Ongoing Tender</h3><hr><br>
 
                         <form method="post">
 
@@ -263,14 +265,39 @@ if (isset($_POST['update'])) {
                                 <div class="col-md-4 mb-4">
                                     <input type="date" name="assignedDate" class="form-control form-control" 
                                            value="<?php echo $tender['assignedDate']; ?>"readonly />
-                                    <label>Assigned Date</label>
+                                    <label>Tender Assigned Date</label>
                                 </div>
 
                                 <div class="col-md-4 mb-4">
                                         <input type="text" id="assignedTime" name="assignedTime" class="form-control form-control" value="<?php echo date("g:i A", strtotime($tender['assignedTime'])); ?>" readonly/>
                                         <label class="form-label" for="assignedTime">Tender Assigned Time</label>
                                 </div>
+                                
                             </div>
+
+                            <!-- APPROVED DATE + TIME (Only visible if ApprovedStatus = yes) -->
+                            <div class="row" id="approvedFields">
+
+                                <div class="col-md-4 mb-4">
+                                    <input type="text" id="approveStatus" name="approveStatus" class="form-control form-control" 
+                                        value="<?php echo $tender['approveStatus']; ?>" readonly />
+                                    <label class="form-label">Acknowledged By Assignee</label>
+                                </div>
+
+                                <div class="col-md-4 mb-4" style="<?php echo ($tender['approveStatus'] == 'Accepted' ? '' : 'display:none'); ?>">
+                                    <input type="date" name="approvedDate" class="form-control form-control" 
+                                        value="<?php echo $tender['approvedDate']; ?>" readonly />
+                                    <label>Assignee Confirmation Date</label>
+                                </div>
+
+                                <div class="col-md-4 mb-4" style="<?php echo ($tender['approveStatus'] == 'Accepted' ? '' : 'display:none'); ?>">
+                                    <input type="text" id="approvedTime" name="approvedTime" class="form-control form-control" 
+                                        value="<?php echo date("g:i A", strtotime($tender['approvedTime'])); ?>" readonly/>
+                                    <label class="form-label">Assignee Confirmation Time</label>
+                                </div>
+
+                            </div>
+
                             
                             <br><br><h3 class="mb-4 pb-2 pb-md-0 mb-md-3">Tender Status</h3><hr><br>
 
@@ -375,7 +402,7 @@ if (isset($_POST['update'])) {
                                 
 
                                 <label>
-                                    <input type="checkbox" name="awardStatus" value="Awarded" 
+                                    <input type="radio" name="awardStatus" value="Awarded" 
                                         <?php if($tender['awardStatus']=="Awarded") echo 'checked'; ?> >
                                     Awarded
                                 </label>
@@ -384,7 +411,7 @@ if (isset($_POST['update'])) {
                             <div class="col-md-4 mb-4">
 
                                 <label>
-                                    <input type="checkbox" name="awardStatus" value="Pending"
+                                    <input type="radio" name="awardStatus" value="Pending"
                                         <?php if($tender['awardStatus']=="Pending") echo 'checked'; ?> >
                                     Pending
                                 </label>
@@ -393,7 +420,7 @@ if (isset($_POST['update'])) {
                             <div class="col-md-4 mb-4">
 
                                 <label>
-                                    <input type="checkbox" name="awardStatus" value="Not Awarded"
+                                    <input type="radio" name="awardStatus" value="Not Awarded"
                                         <?php if($tender['awardStatus']=="Not Awarded") echo 'checked'; ?> >
                                     Not Awarded
                                 </label>

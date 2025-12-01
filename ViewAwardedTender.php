@@ -24,7 +24,10 @@ $_SESSION['LAST_ACTIVITY'] = time();
 // --------------------------------------------------
 // DB CONNECTION
 // --------------------------------------------------
-include "db.php";   
+include "db.php"; 
+
+$userQuery = "SELECT id, uname, department FROM users";
+$userResult = mysqli_query($conn, $userQuery);
 
 // --------------------------------------------------
 // 1. LOAD TENDER DETAILS WHEN ROW IS CLICKED
@@ -123,7 +126,7 @@ if (isset($_POST['update'])) {
 
                 <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                     <div class="card-body p-4 p-md-5">
-                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-3">Submitted Tender</h3><hr><br>
+                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-3"><?php echo $tender['organization']; ?> Awarded Tender</h3><hr><br>
 
                         <form method="post">
 
@@ -197,8 +200,8 @@ if (isset($_POST['update'])) {
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <select class="form-control" name="recievedFrom" disabled>
+                                <div class="col-md-4 mb-4">
+                                    <select class="form-control" name="recievedFrom" readonly>
                                         <option <?php if($tender['recievedFrom']=="Post") echo 'selected'; ?>>Post</option>
                                         <option <?php if($tender['recievedFrom']=="Email") echo 'selected'; ?>>Email</option>
                                         <option <?php if($tender['recievedFrom']=="News Paper") echo 'selected'; ?>>News Paper</option>
@@ -207,35 +210,76 @@ if (isset($_POST['update'])) {
                                     <label>Tender Received From?</label>
                                 </div>
 
-                                <div class="col-md-6 mb-4">
+                                <div class="col-md-4 mb-4">
                                     <input type="date" name="recievedDate" class="form-control form-control" 
-                                           value="<?php echo $tender['recievedDate']; ?>" disabled/>
+                                           value="<?php echo $tender['recievedDate']; ?>" readonly/>
                                     <label>Received Date</label>
                                 </div>
+                                <div class="col-md-4 mb-4">
+                                    <input type="text" id="recievedTime" name="recievedTime" class="form-control form-control" value="<?php echo date("g:i A", strtotime($tender['recievedTime'])); ?>" readonly/>
+                                    <label class="form-label" for="recievedTime">Received Time</label>
+                                </div>
                             </div>
-
                             <div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <select class="form-control" name="assignedBy" disabled>
-                                        <option <?php if($tender['assignedBy']=="Post") echo 'selected'; ?>>Post</option>
-                                        <option <?php if($tender['assignedBy']=="Email") echo 'selected'; ?>>Email</option>
-                                        <option <?php if($tender['assignedBy']=="News Paper") echo 'selected'; ?>>News Paper</option>
+                                <div class="col-md-4 mb-4">
+                                    <select class="form-control" name="assignedBy" readonly>
+                                        <?php
+                                    if(mysqli_num_rows($userResult) > 0){
+                                        while($row = mysqli_fetch_assoc($userResult)){
+
+                                            // Check if user equals the existing assigned user
+                                            $selected = ($row['uname'] == $currentAssignedBy) ? "selected" : "";
+
+                                            echo "<option value='".$row['uname']."' $selected>"
+                                                .$row['uname']." - ".$row['department'].
+                                                "</option>";
+                                        }
+                                    } else {
+                                        echo "<option value='' disabled>No users found</option>";
+                                    }
+                                    ?>
                                     </select>
                                     <label>Assigned Person</label>
                                 </div>
 
-                                <div class="col-md-6 mb-4">
+                                <div class="col-md-4 mb-4">
                                     <input type="date" name="assignedDate" class="form-control form-control" 
-                                           value="<?php echo $tender['assignedDate']; ?>" disabled />
+                                           value="<?php echo $tender['assignedDate']; ?>" readonly />
                                     <label>Assigned Date</label>
                                 </div>
+                                <div class="col-md-4 mb-4">
+                                        <input type="text" id="assignedTime" name="assignedTime" class="form-control form-control" value="<?php echo date("g:i A", strtotime($tender['assignedTime'])); ?>" readonly/>
+                                        <label class="form-label" for="assignedTime">Assigned Time</label>
+                                </div>
+                            </div>
+
+                            <div class="row" id="approvedFields" >
+
+                                <div class="col-md-4 mb-4">
+                                    <input type="text" id="approveStatus" name="approveStatus" class="form-control form-control" 
+                                        value="<?php echo $tender['approveStatus']; ?>" readonly/>
+                                    <label class="form-label">Acknowledged By Assignee</label>
+                                </div>
+
+                                <div class="col-md-4 mb-4" style="<?php echo ($tender['approveStatus'] == 'Accepted' ? '' : 'display:none'); ?>">>
+                                    <input type="date" name="approvedDate" class="form-control form-control" 
+                                        value="<?php echo $tender['approvedDate']; ?>" readonly/>
+                                    <label>Assignee Confirmation Date</label>
+                                </div>
+
+                                <div class="col-md-4 mb-4" style="<?php echo ($tender['approveStatus'] == 'Accepted' ? '' : 'display:none'); ?>">>
+                                    <input type="text" id="approvedTime" name="approvedTime" class="form-control form-control" 
+                                        value="<?php echo date("g:i A", strtotime($tender['approvedTime'])); ?>" readonly  />
+                                    <label class="form-label">Assignee Confirmation Time</label>
+                                </div>
+
                             </div>
                             
                             <br><br><h3 class="mb-4 pb-2 pb-md-0 mb-md-3">Tender Status</h3><hr><br>
 
                             <div class="row">
                             <div class="col-md-4 mb-4">
-                                <select class="form-control" name="status" id="status" onchange="toggleStatusFields()" disabled>
+                                <select class="form-control" name="status" id="status" onchange="toggleStatusFields()" readonly>
                                     <option value="" <?php if($tender['status']=="") echo 'selected'; ?>></option>
                                     <option value="Completed" <?php if($tender['status']=="Completed") echo 'selected'; ?>>Completed</option>
                                     <option value="Uncompleted" <?php if($tender['status']=="Uncompleted") echo 'selected'; ?>>Uncompleted</option>
@@ -248,7 +292,7 @@ if (isset($_POST['update'])) {
                         <div class="row" id="reasonField">
                             <div class="col-md-8 mb-4">
                                 <input type="text" name="reason" class="form-control form-control" 
-                                    value="<?php echo $tender['reason']; ?>" disabled/>
+                                    value="<?php echo $tender['reason']; ?>" readonly/>
                                 <label>Reason</label>
                             </div>
                         </div>
@@ -258,13 +302,13 @@ if (isset($_POST['update'])) {
                             <div class="row">
                                 <div class="col-md-4 mb-4">
                                     <input type="date" name="submittedDate" class="form-control form-control" 
-                                        value="<?php echo $tender['submittedDate']; ?>" disabled/>
+                                        value="<?php echo $tender['submittedDate']; ?>" readonly/>
                                     <label>Submitted Date</label>
                                 </div>
 
                                 <div class="col-md-4 mb-4">
                                     <input type="text" name="handoverby" class="form-control form-control" 
-                                        value="<?php echo $tender['handoverby']; ?>" disabled/>
+                                        value="<?php echo $tender['handoverby']; ?>" readonly/>
                                     <label>Hand Over Method</label>
                                 </div>
                             </div>
@@ -275,7 +319,7 @@ if (isset($_POST['update'])) {
                         
                         <div class="row">
                             <div class="col-md-4 mb-4">
-                                <select class="form-control" name="readings" id="readings" onchange="toggleReadingFields()" disabled>
+                                <select class="form-control" name="readings" id="readings" onchange="toggleReadingFields()" readonly>
                                     <option value="" <?php if($tender['readings']=="") echo 'selected'; ?>></option>
                                     <option value="Collected" <?php if($tender['readings']=="Collected") echo 'selected'; ?>>Collected</option>
                                     <option value="NotCollected" <?php if($tender['readings']=="NotCollected") echo 'selected'; ?>>Not Collected</option>
@@ -288,7 +332,7 @@ if (isset($_POST['update'])) {
                         <div class="row" id="yField">
                             <div class="col-md-8 mb-4">
                                 <input type="text" name="l1supplier" class="form-control form-control" 
-                                    value="<?php echo $tender['l1supplier']; ?>" disabled/>
+                                    value="<?php echo $tender['l1supplier']; ?>" readonly/>
                                 <label>L1 Supplier</label>
                             </div>
                         </div>
@@ -298,13 +342,13 @@ if (isset($_POST['update'])) {
                             <div class="row">
                                 <div class="col-md-4 mb-4">
                                     <input type="text" name="l1price" class="form-control form-control" 
-                                        value="<?php echo $tender['l1price']; ?>" disabled/>
+                                        value="<?php echo $tender['l1price']; ?>" readonly/>
                                     <label>L1 Price</label>
                                 </div>
 
                                 <div class="col-md-4 mb-4">
                                     <input type="text" name="ourPrice" class="form-control form-control" 
-                                        value="<?php echo $tender['ourprice']; ?>" disabled/>
+                                        value="<?php echo $tender['ourprice']; ?>" readonly/>
                                     <label>Our Price</label>
                                 </div>
                             </div>
@@ -317,8 +361,8 @@ if (isset($_POST['update'])) {
                                 
 
                                 <label>
-                                    <input type="checkbox" name="awardStatus" value="Awarded" 
-                                        <?php if($tender['awardStatus']=="Awarded") echo 'checked'; ?> disabled>
+                                    <input type="radio" name="awardStatus" value="Awarded" 
+                                        <?php if($tender['awardStatus']=="Awarded") echo 'checked'; ?> readonly>
                                     Awarded
                                 </label>
                             </div>
@@ -326,8 +370,8 @@ if (isset($_POST['update'])) {
                             <div class="col-md-4 mb-4">
 
                                 <label>
-                                    <input type="checkbox" name="awardStatus" value="Pending"
-                                        <?php if($tender['awardStatus']=="Pending") echo 'checked'; ?> disabled>
+                                    <input type="radio" name="awardStatus" value="Pending"
+                                        <?php if($tender['awardStatus']=="Pending") echo 'checked'; ?> readonly>
                                     Pending
                                 </label>
                             </div>
@@ -335,8 +379,8 @@ if (isset($_POST['update'])) {
                             <div class="col-md-4 mb-4">
 
                                 <label>
-                                    <input type="checkbox" name="awardStatus" value="Not Awarded"
-                                        <?php if($tender['awardStatus']=="Not Awarded") echo 'checked'; ?> disabled>
+                                    <input type="radio" name="awardStatus" value="Not Awarded"
+                                        <?php if($tender['awardStatus']=="Not Awarded") echo 'checked'; ?> readonly>
                                     Not Awarded
                                 </label>
                             </div>
@@ -347,6 +391,7 @@ if (isset($_POST['update'])) {
                                 <!-- <button class="btn btn-primary" name="update" style="width: 120px;">Update</button> -->
                                 <a href="SubmittedTenderTable.php" class="btn btn-secondary" style="width: 120px;">Back</a>
                             </div>
+
 
                         </form>
 

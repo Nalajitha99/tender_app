@@ -101,6 +101,7 @@ function printPDF(){
     </div>
 
 <div class="row mb-3">
+    <?php if ($userName == "Admin" || $userName == "Prasadini") { ?>
     <div class="col-md-4">
         <label for="filterByUser" class="form-label">Filter by Assigned Person:</label>
         <select id="filterByUser" class="form-select" onchange="loadSalesData()">
@@ -122,6 +123,7 @@ function printPDF(){
                 ?>
             </select>
     </div>
+    <?php } ?>
     <div class="col-md-4">
         <label for="searchCustomer" class="form-label">Search by Organization Name:</label>
         <input type="text" id="searchCustomer" class="form-control" onkeyup="loadSalesData()" placeholder="Enter organization name...">

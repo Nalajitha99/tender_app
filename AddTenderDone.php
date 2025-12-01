@@ -21,6 +21,7 @@ $recievedDate    = $_POST['recievedDate'];
 $recievedTime    = $_POST['recievedTime'];
 $assignedDate    = $_POST['assignedDate']; 
 $assignedTime    = $_POST['assignedTime'];
+$approveStatus   = 'Pending';
 
 // Handle Bid Fields
 if ($bidSecurity === "Yes") {
@@ -36,12 +37,12 @@ if ($bidSecurity === "Yes") {
 // SQL Query
 // ---------------------------------------------
 $sql = "INSERT INTO tenders 
-        (organization, tenderNo, tenderTitle, description, location, closingDate, bidSecurity, bidAmount, bidValidity, recievedFrom, recievedDate, recievedTime, assignedBy, assignedDate, assignedTime, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Ongoing')";
+        (organization, tenderNo, tenderTitle, description, location, closingDate, bidSecurity, bidAmount, bidValidity, recievedFrom, recievedDate, recievedTime, assignedBy, assignedDate, assignedTime, status, approveStatus)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Ongoing', ?)";
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param(
-    "sssssssssssssss",
+    "ssssssssssssssss",
     $organization,
     $tenderNo,
     $tenderTitle,
@@ -56,7 +57,8 @@ $stmt->bind_param(
     $recievedTime,
     $assignedBy,
     $assignedDate,
-    $assignedTime
+    $assignedTime,
+    $approveStatus
 );
 
 // ---------------------------------------------

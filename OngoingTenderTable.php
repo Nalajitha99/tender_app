@@ -101,26 +101,28 @@ function printPDF(){
     </div>
 
     <div class="row mb-3">
+        <?php if ($userName == "Admin" || $userName == "Prasadini") { ?>
         <div class="col-md-4">
             <label for="filterByUser" class="form-label">Filter by Assigned Person:</label>
             <select id="filterByUser" class="form-select" onchange="loadSalesData()">
                 <option value="">All</option>
                 <?php
-                if (mysqli_num_rows($userResult) > 0) {
-                    while ($row = mysqli_fetch_assoc($userResult)) {
-                        if (strtolower($row['uname']) === "admin" || ($row['uname']) === "Prasadini") {
-                                                    continue;
-                                                }
-                        $display = $row['uname'];
-                        if (!empty($row['department'])) {
-                            $display .= " - " . $row['department'];
+                    if (mysqli_num_rows($userResult) > 0) {
+                        while ($row = mysqli_fetch_assoc($userResult)) {
+                            if (strtolower($row['uname']) === "admin" || ($row['uname']) === "Prasadini") {
+                                continue;
+                            }
+                            $display = $row['uname'];
+                            if (!empty($row['department'])) {
+                                $display .= " - " . $row['department'];
+                            }
+                            echo "<option value='" . $row['uname'] . "'>$display</option>";
                         }
-                        echo "<option value='" . $row['uname'] . "'>$display</option>";
                     }
-                }
-                ?>
+                    ?>
             </select>
         </div>
+        <?php } ?>
 
         <div class="col-md-4">
             <label for="searchCustomer" class="form-label">Search by Organization Name:</label>
@@ -138,6 +140,7 @@ function printPDF(){
                     <th>Bid Security</th>
                     <th>Assigned Person</th>
                     <th>Closing Date</th>
+                    <th>Assignee Confirmation</th>
                 </tr>
             </thead>
             <tbody id="tender-data"></tbody>
@@ -186,6 +189,14 @@ function loadSalesData(page = 1) {
             data.data.forEach(row => {
                 const tr = document.createElement('tr');
                 tr.className = 'text-center';
+
+                let actionBtn = "";
+
+                    if (row.approveStatus === "Accepted") {
+                        actionBtn = `<button class="btn btn-secondary btn-sm" disabled>Accepted</button>`;
+                    } else {
+                        actionBtn = `<button class="btn btn-success btn-sm" onclick="approveTender(${row.id}, event)">Accept</button>`;
+                    }
                 tr.innerHTML = `
                     <td>${row.organization}</td>
                     <td>${row.location}</td>
@@ -193,6 +204,7 @@ function loadSalesData(page = 1) {
                     <td>${row.bidSecurity}</td>
                     <td>${row.assignedPerson}</td>
                     <td>${row.closingDate}</td>
+                    <td>${actionBtn}</td>
                 `;
                 tr.onclick = () => window.location.href = `ViewTender.php?id=${row.id}`;
                 tbody.appendChild(tr);
@@ -240,6 +252,29 @@ function clearFilter() {
 }
 
 document.addEventListener('DOMContentLoaded', loadSalesData);
+
+function approveTender(id, event) {
+    event.stopPropagation();
+
+    if (!confirm("Approve this tender?")) return;
+
+    fetch("approveTender.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id=${id}`
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            alert("Tender approved!");
+            loadSalesData(currentPage); // refresh table
+        } else {
+            alert("Error: " + result.error);
+        }
+    })
+    .catch(err => alert("Request failed: " + err));
+}
+
 </script>
 
 <footer style="background-color:#320303" class="mt-auto py-4 px-4 px-xl-5 text-white d-flex justify-content-between align-items-center">
