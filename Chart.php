@@ -120,6 +120,11 @@ $userResult = $conn->query("SELECT uname, department FROM users ORDER BY uname A
                     <li class="nav-item"><a class="nav-link active" href="AddSalesPerson.php" style="font-weight:bold;">Add Sales Person </a></li>&nbsp;&nbsp;&nbsp;&nbsp;
                 <?php } ?>
             </ul>
+            <button 
+                onclick="window.open('https://drive.google.com/drive/folders/16-jPxH3thRyOWdHxssKVbCATwYWXVv6j?usp=sharing', '_blank')" 
+                style="padding:10px 20px; background:#4a90e2; color:white; border:none; border-radius:6px; cursor:pointer;">
+                Supporting Documents
+            </button>&nbsp;&nbsp;&nbsp;&nbsp;
             <span class="navbar-text me-3">Logged in as: <?php echo htmlspecialchars($userName); ?></span>
             <a href="logout.php" class="btn btn-outline-dark btn-sm">Logout</a>
         </div>
@@ -135,7 +140,7 @@ $userResult = $conn->query("SELECT uname, department FROM users ORDER BY uname A
     <select id="assignedPerson" onchange="applyFilters()">
         <option value="">All Assigned Persons</option>
         <?php while($user = $userResult->fetch_assoc()): 
-        if (strtolower($user['uname']) === "admin" || ($user['uname']) === "Prasadini") {
+        if (strtolower($user['uname']) === "admin" || ($user['uname']) === "Prasadini" || ($user['uname']) === "Wimal" || ($user['uname']) === "Chanaka") {
                                                     continue;
                                                 }
             $display = $user['uname'];
@@ -158,6 +163,7 @@ $userResult = $conn->query("SELECT uname, department FROM users ORDER BY uname A
 <?php if ($userName == "Prasadini" || $userName == "Admin") { ?>
     <a href="AddTender.php" class="btn btn-danger">Add New Tender</a>
 <?php } ?>
+
 </div>
 
 

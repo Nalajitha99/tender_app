@@ -1,6 +1,7 @@
 <?php
 header("Content-Type: application/json; charset=utf-8");
 include "db.php";
+session_start();  // 🔥 Required to read logged-in username
 
 $response = [
     "error" => null,
@@ -12,7 +13,10 @@ $response = [
 ];
 
 try {
-    // --- Read & validate inputs ------------------------------------------------
+    // --- Logged-in user ------------------------------------------------------
+    $loggedUser = isset($_SESSION['username']) ? $_SESSION['username'] : "";
+
+    // --- Read & validate inputs ---------------------------------------------
     $organization = isset($_GET['organization']) ? trim($_GET['organization']) : "";
     $userFilter   = isset($_GET['user']) ? trim($_GET['user']) : "";
     $startDate    = isset($_GET['startDate']) ? trim($_GET['startDate']) : "";
@@ -28,23 +32,33 @@ try {
     $offset = ($page - 1) * $limit;
     $response['currentPage'] = $page;
 
-    // --- Build WHERE clause safely --------------------------------------------
+    // --- Build WHERE clause --------------------------------------------------
     $where = "WHERE status = 'Completed'";
+
+    // ✔ Organization filter
     if ($organization !== "") {
         $where .= " AND organization LIKE '%" . $conn->real_escape_string($organization) . "%'";
     }
-    if ($userFilter !== "") {
+
+    // ✔ Admin & Prasadini can filter by user
+    if ($userFilter !== "" && ($loggedUser === "Admin" || $loggedUser === "Prasadini" || $loggedUser === "Wimal" || $loggedUser === "Chanaka")) {
         $where .= " AND assignedBy LIKE '%" . $conn->real_escape_string($userFilter) . "%'";
     }
 
-    // --- Add date filter if provided -----------------------------------------
+    // ✔ Date filter
     if ($startDate !== "" && $endDate !== "") {
         $start = $conn->real_escape_string($startDate);
         $end = $conn->real_escape_string($endDate);
         $where .= " AND assignedDate BETWEEN '$start' AND '$end'";
     }
 
-    // --- Count total rows -----------------------------------------------------
+    // 🔥 MOST IMPORTANT PART:
+    //    Non-admin users only see their own tenders
+    if ($loggedUser !== "Admin" && $loggedUser !== "Prasadini" && $loggedUser !== "Wimal" && $loggedUser !== "Chanaka") {
+        $where .= " AND assignedBy = '" . $conn->real_escape_string($loggedUser) . "'";
+    }
+
+    // --- Count rows ----------------------------------------------------------
     $countSql = "SELECT COUNT(*) AS total FROM tenders {$where}";
     $countRes = $conn->query($countSql);
     if (!$countRes) throw new Exception("Count query failed: " . $conn->error);
@@ -53,7 +67,7 @@ try {
     $response['totalRows'] = $totalRows;
     $response['totalPages'] = $totalRows > 0 ? (int) ceil($totalRows / $limit) : 1;
 
-    // --- Main data query ------------------------------------------------------
+    // --- Main data query -----------------------------------------------------
     $sql = "SELECT
                 id,
                 organization,
@@ -61,7 +75,8 @@ try {
                 tenderNo,
                 bidSecurity,
                 assignedBy AS assignedPerson,
-                closingDate
+                closingDate,
+                approveStatus
             FROM tenders
             {$where}
             ORDER BY closingDate DESC

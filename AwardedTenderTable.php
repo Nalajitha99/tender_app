@@ -108,7 +108,7 @@ function printPDF(){
                 <?php
                 if (mysqli_num_rows($userResult) > 0) {
                     while ($row = mysqli_fetch_assoc($userResult)) {
-                        if (strtolower($row['uname']) === "admin" || ($row['uname']) === "Prasadini") {
+                        if (strtolower($row['uname']) === "admin" || ($row['uname']) === "Prasadini" || ($row['uname']) === "Wimal" || ($row['uname']) === "Chanaka") {
                                                     continue;
                                                 }
                         $display = $row['uname'];

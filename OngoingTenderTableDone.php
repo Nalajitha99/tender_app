@@ -41,7 +41,7 @@ try {
     }
 
     // ✔ Admin & Prasadini can filter by user
-    if ($userFilter !== "" && ($loggedUser === "Admin" || $loggedUser === "Prasadini")) {
+    if ($userFilter !== "" && ($loggedUser === "Admin" || $loggedUser === "Prasadini" || $loggedUser === "Wimal" || $loggedUser === "Chanaka")) {
         $where .= " AND assignedBy LIKE '%" . $conn->real_escape_string($userFilter) . "%'";
     }
 
@@ -54,7 +54,7 @@ try {
 
     // 🔥 MOST IMPORTANT PART:
     //    Non-admin users only see their own tenders
-    if ($loggedUser !== "Admin" && $loggedUser !== "Prasadini") {
+    if ($loggedUser !== "Admin" && $loggedUser !== "Prasadini" && $loggedUser !== "Wimal" && $loggedUser !== "Chanaka") {
         $where .= " AND assignedBy = '" . $conn->real_escape_string($loggedUser) . "'";
     }
 

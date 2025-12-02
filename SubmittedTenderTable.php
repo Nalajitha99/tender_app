@@ -101,7 +101,7 @@ function printPDF(){
     </div>
 
 <div class="row mb-3">
-    <?php if ($userName == "Admin" || $userName == "Prasadini") { ?>
+    <?php if ($userName == "Admin" || $userName == "Prasadini" || $userName == "Wimal" || $userName == "Chanaka") { ?>
     <div class="col-md-4">
         <label for="filterByUser" class="form-label">Filter by Assigned Person:</label>
         <select id="filterByUser" class="form-select" onchange="loadSalesData()">
@@ -110,7 +110,7 @@ function printPDF(){
                 <?php
                 if (mysqli_num_rows($userResult) > 0) {
                     while ($row = mysqli_fetch_assoc($userResult)) {
-                        if (strtolower($row['uname']) === "admin" || ($row['uname']) === "Prasadini") {
+                        if (strtolower($row['uname']) === "admin" || ($row['uname']) === "Prasadini" || ($row['uname']) === "Wimal" || ($row['uname']) === "Chanaka") {
                                                     continue;
                                                 }
                         $display = $row['uname'];
