@@ -5,7 +5,7 @@ header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
 header("Pragma: no-cache"); // HTTP 1.0
 header("Expires: 0"); 
 
-$timeout_duration = 600;
+$timeout_duration = 7200;
 
 if (!isset($_SESSION['username'])) {
     header("Location: index.php");
@@ -49,7 +49,7 @@ $userResult = mysqli_query($conn, $userQuery);
                     <div class="card-body p-4 p-md-5">
                         <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">New Tender Form</h3>
                         
-                        <form name="salesForm" id="salesForm" action="AddTenderDone.php" method="post">
+                        <form name="salesForm" id="salesForm" action="AddTenderDone.php" method="post" onsubmit="return validateForm()">
 
                             <div class="row">
                                 <div class="col-md-6 mb-4">
@@ -95,14 +95,15 @@ $userResult = mysqli_query($conn, $userQuery);
                                     <label class="form-label d-block">Bid Security Required?</label>
 
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="bidYes" onclick="handleBidSecurity('yes')">
+                                        <input class="form-check-input" type="checkbox" id="bidYes" name="bidSecurity" onclick="handleBidSecurity('yes')">
                                         <label class="form-check-label" for="bidYes">Yes</label>
                                     </div>
 
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="bidNo" onclick="handleBidSecurity('no')">
+                                        <input class="form-check-input" type="checkbox" id="bidNo" name="bidSecurity" onclick="handleBidSecurity('no')">
                                         <label class="form-check-label" for="bidNo">No</label>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -130,7 +131,7 @@ $userResult = mysqli_query($conn, $userQuery);
 
                             <div class="row">
                                 <div class="col-md-4 mb-4">
-                                    <select class="select form-control" id="recievedFrom" name="recievedFrom" require>
+                                    <select class="select form-control" id="recievedFrom" name="recievedFrom" required>
                                         <option value="1" selected></option>
                                         <option value="Post">Post</option>
                                         <option value="Email">Email</option>
@@ -141,11 +142,11 @@ $userResult = mysqli_query($conn, $userQuery);
                                     <label class="form-label select-label">Tender Recieved From?</label>
                                 </div>
                                 <div class="col-md-4 mb-4">
-                                        <input type="date" id="recievedDate" name="recievedDate" class="form-control form-control" />
+                                        <input type="date" id="recievedDate" name="recievedDate" class="form-control form-control" required />
                                         <label class="form-label" for="recievedDate">Tender Recieved Date</label>
                                 </div>
                                 <div class="col-md-4 mb-4">
-                                        <input type="time" id="recievedTime" name="recievedTime" class="form-control form-control" />
+                                        <input type="time" id="recievedTime" name="recievedTime" class="form-control form-control" required/>
                                         <label class="form-label" for="recievedTime">Tender Recieved Time</label>
                                 </div>
                             </div>
@@ -172,11 +173,11 @@ $userResult = mysqli_query($conn, $userQuery);
                                     <label class="form-label select-label">Tender Assigned Person</label>
                                 </div>
                                 <div class="col-md-4 mb-4">
-                                        <input type="date" id="assignedDate" name="assignedDate" class="form-control form-control" />
+                                        <input type="date" id="assignedDate" name="assignedDate" class="form-control form-control" required/>
                                         <label class="form-label" for="assignedDate">Tender Assigned Date</label>
                                 </div>
                                 <div class="col-md-4 mb-4">
-                                        <input type="time" id="assignedTime" name="assignedTime" class="form-control form-control" />
+                                        <input type="time" id="assignedTime" name="assignedTime" class="form-control form-control" required/>
                                         <label class="form-label" for="assignedTime">Tender Assigned Time</label>
                                 </div>
                             </div>
@@ -225,6 +226,21 @@ $userResult = mysqli_query($conn, $userQuery);
             document.getElementById("bidValidity").required = false;
         }
     }
+
+
+    function validateForm() {
+        const yes = document.getElementById("bidYes").checked;
+        const no  = document.getElementById("bidNo").checked;
+
+        if (!yes && !no) {
+            alert("Please select Yes or No for Bid Security.");
+            return false; // Prevent form submission
+        }
+
+        return true;
+    }
+
+
 </script>
 
 </body>

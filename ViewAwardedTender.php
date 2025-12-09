@@ -6,7 +6,7 @@ header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
 header("Pragma: no-cache"); // HTTP 1.0
 header("Expires: 0"); 
 
-$timeout_duration = 600;
+$timeout_duration = 7200;
 
 if (!isset($_SESSION['username'])) {
     header("Location: index.php");

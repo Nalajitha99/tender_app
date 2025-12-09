@@ -1,6 +1,6 @@
 <?php
 session_start();
-$timeout_duration = 600;
+$timeout_duration = 7200;
 
 if (!isset($_SESSION['username'])) {
     header("Location: index.php");

@@ -5,7 +5,7 @@
 include "db.php";
 
 session_start();
-$timeout_duration = 600;
+$timeout_duration = 7200;
 
 header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
 header("Pragma: no-cache"); // HTTP 1.0
@@ -233,7 +233,7 @@ const tenderStatusChart = new Chart(document.getElementById('tenderStatusChart')
             backgroundColor:['green','red','orange']
         }]
     },
-    options:{responsive:true,plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',color:'black',font:{weight:'bold',size:14}}},scales:{y:{beginAtZero:true,precision:0}}},plugins:[ChartDataLabels]
+    options:{responsive:true,plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',color:'black',font:{weight:'bold',size:14}}},scales:{y:{beginAtZero:true,precision:0,ticks:{ stepSize: 1,callback: function(value){return Number.isInteger(value) ? value : null;}}}}},plugins:[ChartDataLabels]
 });
 
 const awardStatusChart = new Chart(document.getElementById('awardStatusChart').getContext('2d'),{
@@ -246,7 +246,7 @@ const awardStatusChart = new Chart(document.getElementById('awardStatusChart').g
             backgroundColor:['blue','gray','purple']
         }]
     },
-    options:{responsive:true,plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',color:'black',font:{weight:'bold',size:14}}},scales:{y:{beginAtZero:true,precision:0}}},plugins:[ChartDataLabels]
+    options:{responsive:true,plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',color:'black',font:{weight:'bold',size:14}}},scales:{y:{beginAtZero:true,precision:0,ticks:{ stepSize: 1,callback: function(value){return Number.isInteger(value) ? value : null;}}}}},plugins:[ChartDataLabels]
 });
 
 const assignedTendersChart = new Chart(document.getElementById('assignedTendersChart').getContext('2d'),{
@@ -270,7 +270,7 @@ const assignedTendersChart = new Chart(document.getElementById('assignedTendersC
                 font:{weight:'bold',size:14}
             }
         },
-        scales:{y:{beginAtZero:true,precision:0}}
+        scales:{y:{beginAtZero:true,precision:0,ticks:{ stepSize: 1,callback: function(value){return Number.isInteger(value) ? value : null;}}}}
     },
     plugins:[ChartDataLabels]
 });

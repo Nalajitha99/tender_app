@@ -2,7 +2,7 @@
 require_once('tcpdf/tcpdf.php');
 
 session_start();
-$timeout_duration = 600;
+$timeout_duration = 7200;
 
 header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
 header("Pragma: no-cache"); // HTTP 1.0
@@ -186,13 +186,27 @@ function loadSalesData(page = 1) {
                 const tr = document.createElement('tr');
                 tr.className = 'text-center';
 
-                let actionBtn = "";
+               let actionBtn = "";
+
+                // If user is Admin or Prasadini → disable ONLY the Accept button
+                if (loggedUser === "Admin" || loggedUser === "Prasadini" || loggedUser === "Wimal" || loggedUser === "Chanaka") {
+
+                    if (row.approveStatus === "Accepted") {
+                        actionBtn = `<button class="btn btn-secondary btn-sm" disabled>Accepted</button>`;
+                    } else {
+                        actionBtn = `<button class="btn btn-success btn-sm" disabled>Accept</button>`;
+                    }
+
+                } else {
 
                     if (row.approveStatus === "Accepted") {
                         actionBtn = `<button class="btn btn-secondary btn-sm" disabled>Accepted</button>`;
                     } else {
                         actionBtn = `<button class="btn btn-success btn-sm" onclick="approveTender(${row.id}, event)">Accept</button>`;
                     }
+                }
+
+
                 tr.innerHTML = `
                     <td>${row.organization}</td>
                     <td>${row.location}</td>
@@ -254,7 +268,7 @@ function approveTender(id, event) {
 
     if (!confirm("Approve this tender?")) return;
 
-    fetch("approveTender.php", {
+    fetch("ApproveTender.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: `id=${id}`
@@ -270,6 +284,10 @@ function approveTender(id, event) {
     })
     .catch(err => alert("Request failed: " + err));
 }
+  
+    const loggedUser = "<?php echo $userName; ?>";
+
+
 
 </script>
 
