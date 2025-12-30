@@ -79,7 +79,7 @@ try {
                 approveStatus
             FROM tenders
             {$where}
-            ORDER BY closingDate DESC
+            ORDER BY recievedDate DESC
             LIMIT {$limit} OFFSET {$offset}";
 
     $response['query'] = $sql;

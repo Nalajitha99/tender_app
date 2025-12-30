@@ -261,13 +261,13 @@ if (isset($_POST['update'])) {
                                     <label class="form-label">Acknowledged By Assignee</label>
                                 </div>
 
-                                <div class="col-md-4 mb-4" style="<?php echo ($tender['approveStatus'] == 'Accepted' ? '' : 'display:none'); ?>">>
+                                <div class="col-md-4 mb-4" style="<?php echo ($tender['approveStatus'] == 'Accepted' ? '' : 'display:none'); ?>">
                                     <input type="date" name="approvedDate" class="form-control form-control" 
                                         value="<?php echo $tender['approvedDate']; ?>" readonly/>
                                     <label>Assignee Confirmation Date</label>
                                 </div>
 
-                                <div class="col-md-4 mb-4" style="<?php echo ($tender['approveStatus'] == 'Accepted' ? '' : 'display:none'); ?>">>
+                                <div class="col-md-4 mb-4" style="<?php echo ($tender['approveStatus'] == 'Accepted' ? '' : 'display:none'); ?>">
                                     <input type="text" id="approvedTime" name="approvedTime" class="form-control form-control" 
                                         value="<?php echo date("g:i A", strtotime($tender['approvedTime'])); ?>" readonly  />
                                     <label class="form-label">Assignee Confirmation Time</label>

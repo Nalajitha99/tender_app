@@ -90,7 +90,7 @@ $userResult = $conn->query("SELECT uname, department FROM users ORDER BY uname A
 // -------------------------------
 $salesResult = $conn->query("
     SELECT salesPerson, COUNT(*) AS total
-    FROM sales
+    FROM finish_sales
     GROUP BY salesPerson
 ");
 
@@ -142,15 +142,12 @@ while ($row = $salesResult->fetch_assoc()) {
         <img src="images/footerLogo.png" alt="Powernet Logo" class="navbar-brand" style="height: 50px;">
         <div class="collapse navbar-collapse" id="navbarNav">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item" style="background-color:rgb(166, 166, 166);border-radius:10px"><a class="nav-link active" href="Chart.php" style="font-weight:bold;">Home</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-              <!--  <li class="nav-item"><a class="nav-link active" href="OngoingTenderTable.php" style="font-weight:bold;">Ongoing Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="Chart.php" style="font-weight:bold;">Home</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item" style="background-color:rgb(166, 166, 166);border-radius:10px"><a class="nav-link active" href="Chart1.php" style="font-weight:bold;">Dashboard</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link active" href="OngoingTenderTable.php" style="font-weight:bold;">Ongoing Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
                 <li class="nav-item"><a class="nav-link active" href="SubmittedTenderTable.php" style="font-weight:bold;">Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
                 <li class="nav-item"><a class="nav-link active" href="UncompletedTenderTable.php" style="font-weight:bold;">Not Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="AwardedTenderTable.php" style="font-weight:bold;">Awarded Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp; -->
-                <?php if($userName=="Admin") { ?>
-                    <li class="nav-item"><a class="nav-link active" href="SalesPersonList.php" style="font-weight:bold;">Sales Person List</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <li class="nav-item"><a class="nav-link active" href="AddSalesPerson.php" style="font-weight:bold;">Add Sales Person </a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <?php } ?>
+                <li class="nav-item"><a class="nav-link active" href="AwardedTenderTable.php" style="font-weight:bold;">Awarded Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
             </ul>
             <button 
                 onclick="window.open('https://drive.google.com/drive/folders/16-jPxH3thRyOWdHxssKVbCATwYWXVv6j?usp=sharing', '_blank')" 
@@ -166,11 +163,13 @@ while ($row = $salesResult->fetch_assoc()) {
 
 <!-- <h2>Tender Dashboard</h2> -->
 
-
+<div style="text-align:center; font-size:28px; font-weight:bold; margin-bottom:20px;">
+    Total Tenders: <?php echo $totalTenders; ?>
+</div>
 
 
 <!-- FILTERS -->
-<!-- <div class="date-filter">
+<div class="date-filter">
     <label>Filter Charts</label>
     <select id="assignedPerson" onchange="applyFilters()">
         <option value="">All Assigned Persons</option>
@@ -192,14 +191,14 @@ while ($row = $salesResult->fetch_assoc()) {
     <button class="btn btn-primary btn-sm" onclick="applyFilters()">Apply Filter</button>&nbsp;&nbsp;
     <button class="btn btn-secondary btn-sm" onclick="clearFilters()">Clear Filter</button>&nbsp;&nbsp;
     <button class="btn btn-success btn-sm" onclick="exportPDF()">Print / PDF</button>
-</div> -->
+</div>
 
-<!-- <div class="container text-end mb-3">
+<div class="container text-end mb-3">
 <?php if ($userName == "Prasadini" || $userName == "Admin") { ?>
     <a href="AddTender.php" class="btn btn-danger">Add New Tender</a>
 <?php } ?>
 
-</div> --><br><br><br>
+</div>
 
 
 <!-- FILTER SUMMARY -->
@@ -213,39 +212,30 @@ while ($row = $salesResult->fetch_assoc()) {
 </div>
 
 <div id="chartsContainer" class="charts-row">
-    <!-- <div class="chart-container">
+    <div class="chart-container">
         <canvas id="tenderStatusChart"></canvas>
         <label>Tender Status Distribution</label>
     </div>
     <div class="chart-container">
         <canvas id="awardStatusChart"></canvas>
         <label>Award Status Distribution</label>
-    </div> -->
+    </div>
     <div class="chart-container">
-        <div style="text-align:center; font-size:28px; font-weight:bold; margin-bottom:20px;">
-            Total Tenders: <?php echo $totalTenders; ?> 
-        </div>
         <canvas id="assignedTendersChart"></canvas>
         <label>Assigned Tenders Per Person</label>
-        <br>
+        <!-- <br>
         <div style="text-align:center;">
             <button class="btn btn-lg btn-info mt-2" onclick="window.location.href='Chart1.php'" style="">Tenders</button>
-        </div>
+        </div> -->
     </div>
-    <div class="chart-container">
-        <div style="text-align:center; font-size:28px; font-weight:bold; margin-bottom:20px;">
-            Total Sales: <?php echo array_sum($salesCounts); ?>
-        </div>
+    <!-- <div class="chart-container">
         <canvas id="salesCountChart"></canvas>
-        <label>Sales Activity Count Per Person</label>
+        <label>Sales Count Per Person</label>
         <br>
         <div style="text-align:center;">
-            <?php if ($userName != "Prasadini") { ?>
-                <button class="btn btn-lg btn-info mt-2" onclick="window.location.href='table1.php'">Sales</button>
-            <?php } ?>
-            
+            <button class="btn btn-lg btn-info mt-2" onclick="window.location.href='table1.php'">Sales</button>
         </div>
-    </div>
+    </div> -->
 
 </div>
 
@@ -272,39 +262,39 @@ function applyFilters(){
     if(start) params.push("startDate="+start);
     if(end)   params.push("endDate="+end);
     if(person) params.push("assignedPerson="+encodeURIComponent(person));
-    window.location.href = "Chart.php?"+params.join("&");
+    window.location.href = "Chart1.php?"+params.join("&");
 }
-function clearFilters(){ window.location.href="Chart.php"; }
+function clearFilters(){ window.location.href="Chart1.php"; }
 
 // ------------------ RANDOM COLORS FOR ASSIGNED CHART ------------------
 const assignedColors = getRandomColors(<?php echo count($assignedPersons); ?>);
 
 // ------------------ CHARTS ------------------
-// const tenderStatusChart = new Chart(document.getElementById('tenderStatusChart').getContext('2d'), {
-//     type: 'bar',
-//     data: {
-//         labels: ['Completed','Not Completed','Ongoing'],
-//         datasets:[{
-//             label:'Number of Tenders',
-//             data:[<?php echo $completed; ?>,<?php echo $pending; ?>,<?php echo $ongoing; ?>],
-//             backgroundColor:['green','red','orange']
-//         }]
-//     },
-//     options:{responsive:true,plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',color:'black',font:{weight:'bold',size:14}}},scales:{y:{beginAtZero:true,precision:0,ticks:{ stepSize: 1,callback: function(value){return Number.isInteger(value) ? value : null;}}}}},plugins:[ChartDataLabels]
-// });
+const tenderStatusChart = new Chart(document.getElementById('tenderStatusChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: ['Completed','Not Completed','Ongoing'],
+        datasets:[{
+            label:'Number of Tenders',
+            data:[<?php echo $completed; ?>,<?php echo $pending; ?>,<?php echo $ongoing; ?>],
+            backgroundColor:['green','red','orange']
+        }]
+    },
+    options:{responsive:true,plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',color:'black',font:{weight:'bold',size:14}}},scales:{y:{beginAtZero:true,precision:0,ticks:{ stepSize: 1,callback: function(value){return Number.isInteger(value) ? value : null;}}}}},plugins:[ChartDataLabels]
+});
 
-// const awardStatusChart = new Chart(document.getElementById('awardStatusChart').getContext('2d'),{
-//     type:'bar',
-//     data:{
-//         labels:['Awarded','Not Awarded','Pending'],
-//         datasets:[{
-//             label:'Award Status',
-//             data:[<?php echo $awarded; ?>,<?php echo $not_awarded; ?>,<?php echo $pending_award; ?>],
-//             backgroundColor:['blue','gray','purple']
-//         }]
-//     },
-//     options:{responsive:true,plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',color:'black',font:{weight:'bold',size:14}}},scales:{y:{beginAtZero:true,precision:0,ticks:{ stepSize: 1,callback: function(value){return Number.isInteger(value) ? value : null;}}}}},plugins:[ChartDataLabels]
-// });
+const awardStatusChart = new Chart(document.getElementById('awardStatusChart').getContext('2d'),{
+    type:'bar',
+    data:{
+        labels:['Awarded','Not Awarded','Pending'],
+        datasets:[{
+            label:'Award Status',
+            data:[<?php echo $awarded; ?>,<?php echo $not_awarded; ?>,<?php echo $pending_award; ?>],
+            backgroundColor:['blue','gray','purple']
+        }]
+    },
+    options:{responsive:true,plugins:{legend:{display:false},datalabels:{anchor:'end',align:'end',color:'black',font:{weight:'bold',size:14}}},scales:{y:{beginAtZero:true,precision:0,ticks:{ stepSize: 1,callback: function(value){return Number.isInteger(value) ? value : null;}}}}},plugins:[ChartDataLabels]
+});
 
 const assignedTendersChart = new Chart(document.getElementById('assignedTendersChart').getContext('2d'),{
     type:'bar',
@@ -333,45 +323,45 @@ const assignedTendersChart = new Chart(document.getElementById('assignedTendersC
 });
 
 // ------------------ SALES COUNT CHART ------------------
-const salesColors = getRandomColors(<?php echo count($salesPersons); ?>);
+// const salesColors = getRandomColors(<?php echo count($salesPersons); ?>);
 
-const salesCountChart = new Chart(
-    document.getElementById('salesCountChart').getContext('2d'),
-    {
-        type: 'bar',
-        data: {
-            labels: <?php echo json_encode($salesPersons); ?>,
-            datasets: [{
-                label: 'Sales Count',
-                data: <?php echo json_encode($salesCounts); ?>,
-                backgroundColor: salesColors
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                datalabels: {
-                    anchor: 'end',
-                    align: 'end',
-                    color: 'black',
-                    font: { weight: 'bold', size: 14 }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    precision: 0,
-                    ticks: {
-                        stepSize: 1,
-                        callback: value => Number.isInteger(value) ? value : null
-                    }
-                }
-            }
-        },
-        plugins: [ChartDataLabels]
-    }
-);
+// const salesCountChart = new Chart(
+//     document.getElementById('salesCountChart').getContext('2d'),
+//     {
+//         type: 'bar',
+//         data: {
+//             labels: <?php echo json_encode($salesPersons); ?>,
+//             datasets: [{
+//                 label: 'Sales Count',
+//                 data: <?php echo json_encode($salesCounts); ?>,
+//                 backgroundColor: salesColors
+//             }]
+//         },
+//         options: {
+//             responsive: true,
+//             plugins: {
+//                 legend: { display: false },
+//                 datalabels: {
+//                     anchor: 'end',
+//                     align: 'end',
+//                     color: 'black',
+//                     font: { weight: 'bold', size: 14 }
+//                 }
+//             },
+//             scales: {
+//                 y: {
+//                     beginAtZero: true,
+//                     precision: 0,
+//                     ticks: {
+//                         stepSize: 1,
+//                         callback: value => Number.isInteger(value) ? value : null
+//                     }
+//                 }
+//             }
+//         },
+//         plugins: [ChartDataLabels]
+//     }
+// );
 
 // ------------------ PDF EXPORT ------------------
 async function exportPDF() {

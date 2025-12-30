@@ -25,7 +25,16 @@ $startDate    = isset($_GET['startDate']) ? trim($_GET['startDate']) : "";
 $endDate      = isset($_GET['endDate']) ? trim($_GET['endDate']) : "";
 
 // --- Build SQL query with filters ---
-$where = "WHERE status='ongoing'";
+$allowedAll = ["Admin", "Prasadini", "Wimal", "Chanaka"];
+
+if (in_array($userName, $allowedAll)) {
+    // These users can see ALL data
+    $where = "WHERE status='ongoing'";
+} else {
+    // Other users see only their own assigned tenders
+    $where = "WHERE status='ongoing' AND assignedBy = '" . $conn->real_escape_string($userName) . "'";
+}
+
 
 if ($organization !== "") $where .= " AND organization LIKE '%" . $conn->real_escape_string($organization) . "%'";
 if ($userFilter !== "") $where .= " AND assignedBy LIKE '%" . $conn->real_escape_string($userFilter) . "%'";
