@@ -83,6 +83,8 @@ if (isset($_POST['update'])) {
     $readings       = $_POST['readings'];
     $awardStatus    = $_POST['awardStatus'];
     $approveStatus  = $tender['approveStatus'];
+    $doubleCheckedBy = $_POST['doubleCheckedBy'];
+
 
 
 
@@ -112,7 +114,8 @@ if (isset($_POST['update'])) {
             ourprice      = '$ourprice',
             readings      = '$readings',
             awardStatus   = '$awardStatus',
-            approveStatus = '$approveStatus'
+            approveStatus = '$approveStatus',
+            doubleCheckedBy = '$doubleCheckedBy'
         WHERE id = '$id'";
 
     if ($conn->query($sqlUpdate)) {
@@ -122,6 +125,14 @@ if (isset($_POST['update'])) {
         echo "<script>alert('Failed to update tender');</script>";
     }
 }
+
+// Double Checked By (system controlled)
+if ($userName != "Prasadini" && !empty($_POST['doubleCheckedBy'])) {
+    $doubleCheckedBy = $_POST['doubleCheckedBy'];
+} else {
+    $doubleCheckedBy = $tender['doubleCheckedBy'];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -298,6 +309,11 @@ if (isset($_POST['update'])) {
 
                             </div>
 
+                            <div class="row">
+
+                            
+                            </div>
+
                             
                             <br><br><h3 class="mb-4 pb-2 pb-md-0 mb-md-3">Tender Status</h3><hr><br>
 
@@ -354,6 +370,26 @@ if (isset($_POST['update'])) {
                                     <label>Hand Over Method</label>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-4 ms-auto">
+                                    <label class="form-label">Double Checked By</label>
+
+                                    <?php if ($userName != "Prasadini") { ?>
+                                        <select name="doubleCheckedBy" class="form-select">
+                                            <option value="">-- Select Person --</option>
+
+                                            <?php
+                                            $userResult2 = mysqli_query($conn, "SELECT uname, department FROM users");
+                                            while ($row = mysqli_fetch_assoc($userResult2)) {
+                                                $selected = ($tender['doubleCheckedBy'] === $row['uname']) ? "selected" : "";
+                                                echo "<option value='{$row['uname']}' $selected>
+                                                        {$row['uname']} - {$row['department']}
+                                                    </option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    <?php } ?>
+                                </div>
                         </div>
 
                         <br><br><h3 class="mb-4 pb-2 pb-md-0 mb-md-3">Tender Readings</h3><hr><br>
@@ -430,7 +466,7 @@ if (isset($_POST['update'])) {
 
 
                             <div class="mt-4 pt-2 d-flex" style="gap: 10px; width: fit-content;">
-                                <?php if ($userName == "Prasadini" || $userName == "Admin") { ?>
+                                <?php if ($userName != "Prasadini" && $userName != "Wimal" && $userName != "Chanaka") { ?>
                                 <button class="btn btn-primary" name="update" style="width: 120px;">Update</button>
                                 <?php } ?>
                                 <a href="OngoingTenderTable.php" class="btn btn-secondary" style="width: 120px;">Back</a>

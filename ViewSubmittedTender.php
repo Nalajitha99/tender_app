@@ -1,45 +1,40 @@
 <?php
-
 session_start();
 
-header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
-header("Pragma: no-cache"); // HTTP 1.0
-header("Expires: 0"); 
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
 
 $timeout_duration = 7200;
-
 
 if (!isset($_SESSION['username'])) {
     header("Location: index.php");
     exit();
 }
 
+$userName = $_SESSION['username'];
+
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > $timeout_duration) {
-    session_unset();     
-    session_destroy();   
+    session_unset();
+    session_destroy();
     header("Location: index.php?expired=true");
     exit();
 }
 
-$_SESSION['LAST_ACTIVITY'] = time(); 
-// --------------------------------------------------
-// DB CONNECTION
-// --------------------------------------------------
-include "db.php";   
+$_SESSION['LAST_ACTIVITY'] = time();
+
+include "db.php";
 
 $userQuery = "SELECT id, uname, department FROM users";
 $userResult = mysqli_query($conn, $userQuery);
 
-// --------------------------------------------------
-// 1. LOAD TENDER DETAILS WHEN ROW IS CLICKED
-// --------------------------------------------------
 if (!isset($_GET['id'])) {
     echo "<script>alert('No tender selected'); window.location='index.php';</script>";
     exit();
 }
 
 $id = $_GET['id'];
-$sql = "SELECT * FROM tenders WHERE id = '$id'";
+$sql = "SELECT * FROM tenders WHERE id='$id'";
 $result = $conn->query($sql);
 
 if ($result->num_rows != 1) {
@@ -48,71 +43,79 @@ if ($result->num_rows != 1) {
 }
 
 $tender = $result->fetch_assoc();
-
 $currentAssignedBy = $tender['assignedBy'];
-// --------------------------------------------------
-// 2. UPDATE WHEN SUBMITTED
-// --------------------------------------------------
+
+
+// ================= UPDATE =================
 if (isset($_POST['update'])) {
 
-    $organization   = $_POST['organization'];
-    $tenderNo       = $_POST['tenderNo'];
-    $tenderTitle    = $_POST['tenderTitle'];
-    $description    = $_POST['description'];
-    $location       = $_POST['location'];
-    $closingDate    = $_POST['closingDate'];
-    $bidSecurity    = $_POST['bidSecurity']; 
-    $bidAmount      = $_POST['bidAmount'];
-    $bidValidity    = $_POST['bidValidity'];
-    $recievedFrom   = $_POST['recievedFrom'];
-    $recievedDate   = $_POST['recievedDate'];
-    $assignedBy     = $_POST['assignedBy'];
-    $assignedDate   = $_POST['assignedDate'];
-    $status         = $_POST['status'];
-    $reason         = $_POST['reason'];
-    $submittedDate  = $_POST['submittedDate'];
-    $handoverby     = $_POST['handoverby'];
-    $l1supplier     = $_POST['l1supplier'];
-    $l1price        = $_POST['l1price'];
-    $ourprice       = $_POST['ourPrice'];
-    $awardStatus    = isset($_POST['awardStatus']) ? $_POST['awardStatus'] : '';
-    $approveStatus  = $tender['approveStatus']; 
+    $organization  = $_POST['organization'];
+    $tenderNo      = $_POST['tenderNo'];
+    $tenderTitle   = $_POST['tenderTitle'];
+    $description   = $_POST['description'];
+    $location      = $_POST['location'];
+    $closingDate   = $_POST['closingDate'];
+    $bidSecurity   = $_POST['bidSecurity'];
+    $bidAmount     = $_POST['bidAmount'];
+    $bidValidity   = $_POST['bidValidity'];
+    $recievedFrom  = $_POST['recievedFrom'];
+    $recievedDate  = $_POST['recievedDate'];
+    $assignedBy    = $_POST['assignedBy'];
+    $assignedDate  = $_POST['assignedDate'];
+    $status        = $_POST['status'];
+    $reason        = $_POST['reason'];
+    $submittedDate = $_POST['submittedDate'];
+    $handoverby    = $_POST['handoverby'];
+    $l1supplier    = $_POST['l1supplier'];
+    $l1price       = $_POST['l1price'];
+    $ourprice      = $_POST['ourPrice'];
+    $awardStatus   = isset($_POST['awardStatus']) ? $_POST['awardStatus'] : '';
+    $approveStatus = $tender['approveStatus'];
+    $doubleCheckedBy = $_POST['doubleCheckedBy'];
 
-
+    // ✅ SYSTEM LOGIC FOR CHECKED BY PRASADINI
+    if ($userName === "Prasadini" && isset($_POST['checked'])) {
+        $checkedByPrasadini = "Checked";
+    } else {
+        $checkedByPrasadini = $tender['checkedByPrasadini'];
+    }
 
     $sqlUpdate = "UPDATE tenders SET
-            organization  = '$organization',
-            tenderNo      = '$tenderNo',
-            tenderTitle   = '$tenderTitle',
-            description   = '$description',
-            location      = '$location',
-            closingDate   = '$closingDate',
-            bidSecurity   = '$bidSecurity',
-            bidAmount     = '$bidAmount',
-            bidValidity   = '$bidValidity',
-            recievedFrom  = '$recievedFrom',
-            recievedDate  = '$recievedDate',
-            assignedBy    = '$assignedBy',
-            assignedDate  = '$assignedDate',
-            status       = '$status',
-            reason       = '$reason',
-            submittedDate = '$submittedDate',
-            handoverby    = '$handoverby',
-            l1supplier    = '$l1supplier',
-            l1price       = '$l1price',
-            ourprice      = '$ourprice',
-            awardStatus   = '$awardStatus',
-            approveStatus = '$approveStatus'
-        WHERE id = '$id'";
+        organization='$organization',
+        tenderNo='$tenderNo',
+        tenderTitle='$tenderTitle',
+        description='$description',
+        location='$location',
+        closingDate='$closingDate',
+        bidSecurity='$bidSecurity',
+        bidAmount='$bidAmount',
+        bidValidity='$bidValidity',
+        recievedFrom='$recievedFrom',
+        recievedDate='$recievedDate',
+        assignedBy='$assignedBy',
+        assignedDate='$assignedDate',
+        status='$status',
+        reason='$reason',
+        submittedDate='$submittedDate',
+        handoverby='$handoverby',
+        l1supplier='$l1supplier',
+        l1price='$l1price',
+        ourprice='$ourprice',
+        awardStatus='$awardStatus',
+        approveStatus='$approveStatus',
+        checkedByPrasadini='$checkedByPrasadini',
+        doubleCheckedBy='$doubleCheckedBy'
+    WHERE id='$id'";
 
     if ($conn->query($sqlUpdate)) {
-        echo "<script>alert('Tender updated successfully!'); window.location='SubmittedTenderTable.php';</script>";
+        echo "<script>alert('Tender updated successfully'); window.location='SubmittedTenderTable.php';</script>";
         exit();
     } else {
-        echo "<script>alert('Failed to update tender');</script>";
+        echo "<script>alert('Update failed');</script>";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -319,6 +322,23 @@ if (isset($_POST['update'])) {
                                     <label>Hand Over Method</label>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-3 mb-4 ms-auto text-end">
+                                    <label class="form-label text-end">Double Checked By</label>
+
+                                    <!-- Read-only display -->
+                                    <input type="text"
+                                        class="form-control text-end"
+                                        value="<?php echo !empty($tender['doubleCheckedBy']) ? $tender['doubleCheckedBy'] : 'Not Yet'; ?>"
+                                        readonly>
+
+                                    <!-- Hidden value to keep form submission intact -->
+                                    <input type="hidden"
+                                        name="doubleCheckedBy"
+                                        value="<?php echo $tender['doubleCheckedBy']; ?>">
+                                </div>
+                            </div>
+
                         </div>
 
                         <br><br><h3 class="mb-4 pb-2 pb-md-0 mb-md-3">Tender Readings</h3><hr><br>
@@ -393,6 +413,47 @@ if (isset($_POST['update'])) {
                             </div>
                         </div>
 
+                        <hr><br>
+                        
+                        <?php if ($userName === "Prasadini") { ?>
+                            <div class="row mb-3">
+                                <div class="col-md-3 ms-auto text-end">
+                                    <label class="form-label d-block">Checked By Prasadini</label>
+
+                                    <div class="form-check d-flex justify-content-end align-items-center gap-2">
+                                        <input class="form-check-input"
+                                            type="checkbox"
+                                            name="checked"
+                                            id="checked"
+                                            <?php if ($tender['checkedByPrasadini'] === "Checked") echo "checked disabled"; ?>>
+
+                                        <label class="form-check-label">
+                                            <?php echo $tender['checkedByPrasadini']; ?>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php } ?>
+
+
+
+                        <?php if ($userName !== "Prasadini") { ?>
+                            <div class="row mb-3">
+                                <div class="col-md-3 ms-auto text-end">
+                                    <label class="form-label d-block">Checked By Prasadini</label>
+
+                                    <input type="text"
+                                        class="form-control text-end"
+                                        value="<?php echo $tender['checkedByPrasadini']; ?>"
+                                        readonly>
+                                </div>
+                            </div>
+                            <?php } ?>
+
+
+
+
+
 
                             <div class="mt-4 pt-2 d-flex" style="gap: 10px; width: fit-content;">
                                 <button class="btn btn-primary" name="update" style="width: 120px;">Update</button>
@@ -452,6 +513,14 @@ if (isset($_POST['update'])) {
             toggleReadingFields();
 
 </script>
+<script>
+function handleCheckedBy(value) {
+    if (value === 'yes') {
+        document.getElementById('checked').checked = true;
+    }
+}
+</script>
+
 
 
 </body>
