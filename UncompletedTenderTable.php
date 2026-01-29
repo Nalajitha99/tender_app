@@ -44,34 +44,40 @@ $endDate = isset($_GET['endDate']) ? $_GET['endDate'] : '';
     <link rel='stylesheet' type='text/css' media='screen' href='css/table.css'>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-         body { font-family: Arial, sans-serif; }
+         body { font-family: Arial, sans-serif; background:linear-gradient(135deg,#eef2f7,#f9fbfd);}
         #tender-data tr:hover { background-color: #f1f1f1; cursor: pointer; }
         .date-filter { text-align:center; margin-bottom: 20px; }
         .date-filter input { margin: 0 5px; }
+        .table thead {
+            background: linear-gradient(90deg, #4a90e2, #50c878);
+            color: #fff;
+        }
+        #tender-data tr:hover {
+            background: rgba(74, 144, 226, 0.1);
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <img src="images/footerLogo.png" alt="Powernet Logo" class="navbar-brand" style="height: 50px;">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" href="Chart.php" style="font-weight:bold;">Home</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="Chart1.php" style="font-weight:bold;">Dashboard</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="OngoingTenderTable.php" style="font-weight:bold;">Ongoing Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="SubmittedTenderTable.php" style="font-weight:bold;">Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item" style="background-color:rgb(166, 166, 166);border-radius:10px"><a class="nav-link active" href="UncompletedTenderTable.php" style="font-weight:bold;">Not Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link active" href="AwardedTenderTable.php" style="font-weight:bold;">Awarded Tenders</a></li>
-            </ul>
-            <span class="navbar-text me-3">Logged in as: <?php echo htmlspecialchars($userName); ?></span>
-            <a href="logout.php" class="btn btn-outline-dark btn-sm">Logout</a>
-        </div>
-    </div>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background:linear-gradient(135deg,#1f2d3d,#2c3e50);">
+<div class="container-fluid">
+    <img src="images/footerLogo.png" style="height:45px" class="me-3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0"> 
+        <li class="nav-item"><a class="nav-link active" href="Chart.php" style="font-weight:bold;">Home</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+        <li class="nav-item" ><a class="nav-link active" href="Chart1.php" style="font-weight:bold;">Dashboard</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+        <li class="nav-item"><a class="nav-link active" href="OngoingTenderTable.php" style="font-weight:bold;">Ongoing Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+        <?php if ($userName == "Prasadini" || $userName == "Admin") { ?> 
+        <li class="nav-item"><a class="nav-link active" href="CheckedTenderTable.php" style="font-weight:bold;">Check Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+        <?php } ?>
+        <li class="nav-item"><a class="nav-link active" href="SubmittedTenderTable.php" style="font-weight:bold;">Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+        <li class="nav-item" style="background-color:rgb(255, 255, 255, 0.3);border-radius:10px"><a class="nav-link active" href="UncompletedTenderTable.php" style="font-weight:bold;">Not Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+        <li class="nav-item"><a class="nav-link active" href="AwardedTenderTable.php" style="font-weight:bold;">Awarded Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+    </ul>&nbsp;&nbsp;&nbsp;&nbsp;
+    <button onclick="window.open('https://drive.google.com/drive/folders/16-jPxH3thRyOWdHxssKVbCATwYWXVv6j','_blank')" style="padding:10px 20px; background:#4a90e2; color:white; border:none; border-radius:6px; cursor:pointer;"> Supporting Documents </button>&nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="navbar-text text-white me-auto">Logged in as: <?php echo htmlspecialchars($userName); ?></span>
+    <a href="logout.php" class="btn btn-outline-light btn-sm">Logout</a>
+</div>
 </nav>
 <br><br>
 <div class="container my-3">
@@ -133,7 +139,7 @@ function printPDF(){
 
 <div class="table-responsive px-3">
     <table class="table table-bordered">
-        <thead class="table-dark">
+        <thead>
             <tr class="text-center">
                 <th>Organization</th>
                 <th>Location</th>
@@ -240,7 +246,7 @@ function clearFilter() {
 
 document.addEventListener('DOMContentLoaded', loadSalesData);
 </script>
-<footer style="background-color:#320303" class="mt-auto py-4 px-4 px-xl-5 text-white d-flex justify-content-between align-items-center">
+<footer style="background:#1f2d3d;color:#fff;" class="mt-auto py-4 px-4 px-xl-5 text-white d-flex justify-content-between align-items-center">
     <div> © 2026 Powernet (pvt) Ltd.<br> All rights reserved.</div>
     <div id="footer-datetime"></div>
 </footer>

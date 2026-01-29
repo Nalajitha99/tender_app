@@ -1,178 +1,204 @@
 <?php
-
 session_start();
 session_unset();
 session_destroy();
 
-header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
-header("Pragma: no-cache"); // HTTP 1.0
-header("Expires: 0"); 
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
 
 if (isset($_GET['expired']) && $_GET['expired'] == 'true') {
     echo "<script>alert('Session expired. Please log in again.');</script>";
 }
-
-
 ?>
 
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Powernet Tenders</title>
-    <link rel="icon" href="images/logo.ico" type="image/x-icon">
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='css/login.css'>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-    <style>
-      body {
-            background-image: url('images/draw1.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
+<meta charset="utf-8">
+<title>Powernet Tenders | Login</title>
+<link rel="icon" href="images/logo.ico">
 
-        .vh-100 {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        /* Floating login card */
-        .login-card {
-            background: rgba(0, 0, 0, 0.6); /* semi-transparent black */
-            backdrop-filter: blur(10px); /* glass/3D blur effect */
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6); /* soft shadow */
-            border-radius: 15px;
-            padding: 40px;
-            max-width: 400px;
-            width: 100%;
-            color: #fff;
-        }
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        /* Transparent input fields */
-        .form-control {
-            background-color: rgba(255, 255, 255, 0.2); /* transparent input */
-            border: 1px solid rgba(255,255,255,0.5);
-            color: #fff;
-        }
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(
+        rgba(0,0,0,0.55),
+        rgba(0,0,0,0.55)
+    ),
+    url('images/draw1.png') center/cover no-repeat;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
-        .form-label {
-            color: #fff;
-        }
+/* Center content */
+.login-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        /* Login button hover effect */
-        .button {
-            background-color: #320303;
-            color: white;
-            padding: 10px 30px;
-            border: none;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
+/* Glass card */
+.login-card {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    padding: 45px 35px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.6);
+    color: #fff;
+}
 
-        .button:hover {
-            background-color: white;
-            color: black;
-            cursor: pointer;
-        }
+.login-card h2 {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
 
-    </style>
+/* Inputs */
+.form-control {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: #fff;
+    padding: 12px;
+}
 
+.form-control:focus {
+    background: rgba(255,255,255,0.25);
+    border-color: #ffb703;
+    box-shadow: none;
+    color: #fff;
+}
+
+.form-control::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+.form-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* Button */
+.btn-login {
+    background: linear-gradient(135deg, #ffb703, #fb8500);
+    color: #000;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255,183,3,0.6);
+}
+
+/* Links */
+.forgot-link {
+    color: #ffb703;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+footer {
+    background: #1f2d3d;
+    color: #fff;
+    padding: 15px 30px;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+</style>
 </head>
-<body>
-    <section class="vh-100">
-  <div class="login-card">
-    <h2 class="text-center fw-bold mb-4">Log In</h2>
-    <form action="loginDone.php" method="POST">
-      <div class="form-outline mb-3">
-        <input type="text" id="uname" name="uname" class="form-control" placeholder="Enter User Name" />
-        <label class="form-label" for="uname">User Name</label>
-      </div>
-      <div class="form-outline mb-3">
-        <input type="password" id="pword" name="pword" class="form-control" placeholder="Enter Password" />
-        <label class="form-label" for="pword">Password</label>
-      </div>
-      <div class="d-flex justify-content-between mb-4">
-        <a href="forgotPassword/forgotPassword.php" class="text-white">Forgot password?</a>
-      </div>
-      <div class="text-center">
-        <button type="submit" class="button">Login</button>
-      </div>
-    </form>
-  </div>
 
-      </section>
-            
-              <
-       <footer style="background-color:#320303" class="mt-auto py-4 px-4 px-xl-5 text-white d-flex justify-content-between align-items-center">
-    <div> © 2026 Powernet (pvt) Ltd.<br> All rights reserved.</div>
+<body>
+
+<div class="login-wrapper">
+    <div class="login-card">
+        <h2 class="text-center mb-4">TenderDesk</h2>
+
+        <form action="loginDone.php" method="POST">
+            <div class="mb-3">
+                <label class="form-label" for="uname">User Name</label>
+                <input type="text" id="uname" name="uname" class="form-control" placeholder="Enter user name" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="pword">Password</label>
+                <input type="password" id="pword" name="pword" class="form-control" placeholder="Enter password" required>
+            </div>
+
+            <div class="d-flex justify-content-end mb-4">
+                <a href="forgotPassword/forgotPassword.php" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-login">Login</button>
+        </form>
+    </div>
+</div>
+
+<footer>
+    <div>© 2026 Powernet (Pvt) Ltd.<br>All rights reserved.</div>
     <div id="footer-datetime"></div>
 </footer>
 
-
+<!-- Footer Date/Time (UNCHANGED LOGIC) -->
 <script>
-  function getFormattedDate() {
+function getFormattedDate() {
     const date = new Date();
     const day = date.getDate();
     const month = date.toLocaleString('default', { month: 'long' });
     const year = date.getFullYear();
-
-    // Get day suffix (st, nd, rd, th)
     const suffix = (d) => {
-      if (d > 3 && d < 21) return 'th';
-      switch (d % 10) {
-        case 1: return 'st';
-        case 2: return 'nd';
-        case 3: return 'rd';
-        default: return 'th';
-      }
+        if (d > 3 && d < 21) return 'th';
+        return ['th','st','nd','rd'][d % 10] || 'th';
     };
-
     return `${day}${suffix(day)} ${month} ${year}`;
-  }
+}
 
-  function getFormattedTime() {
-    const date = new Date();
-    return date.toLocaleTimeString(); // Customize if needed
-  }
+function getFormattedTime() {
+    return new Date().toLocaleTimeString();
+}
 
-  function updateFooterDateTime() {
+function updateFooterDateTime() {
     document.getElementById('footer-datetime').innerHTML =
-      `${getFormattedDate()}<br>${getFormattedTime()}`;
-  }
+        `${getFormattedDate()}<br>${getFormattedTime()}`;
+}
 
-  updateFooterDateTime();
-  setInterval(updateFooterDateTime, 1000);
+updateFooterDateTime();
+setInterval(updateFooterDateTime, 1000);
 </script>
 
-      </section>
-    
-</body>
-
+<!-- Cache prevention (UNCHANGED) -->
 <script>
-    if (window.history.replaceState) {
-        window.history.replaceState(null, null, window.location.href);
+if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+}
+window.addEventListener('pageshow', function (event) {
+    if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+        window.location.reload();
     }
-
-    window.addEventListener('pageshow', function (event) {
-        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-            window.location.reload();
-        }
-    });
+});
 </script>
+
+</body>
 </html>

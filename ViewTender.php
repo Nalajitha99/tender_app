@@ -390,14 +390,13 @@ if ($userName != "Prasadini" && !empty($_POST['doubleCheckedBy'])) {
                                         </select>
                                     <?php } ?>
                                 </div>
-                        </div>
+                            </div>
 
                         <br><br><h3 class="mb-4 pb-2 pb-md-0 mb-md-3">Tender Readings</h3><hr><br>
 
-                        
                         <div class="row">
                             <div class="col-md-4 mb-4">
-                                <select class="form-control" name="readings" id="readings" onchange="toggleStatusFields()">
+                                <select class="form-control" name="readings" id="readings" onchange="toggleReadingsFields()">
                                     <option value="" <?php if($tender['readings']=="") echo 'selected'; ?>></option>
                                     <option value="Collected" <?php if($tender['readings']=="Collected") echo 'selected'; ?>>Collected</option>
                                     <option value="NotCollected" <?php if($tender['readings']=="NotCollected") echo 'selected'; ?>>Not Collected</option>
@@ -463,6 +462,7 @@ if ($userName != "Prasadini" && !empty($_POST['doubleCheckedBy'])) {
                                 </label>
                             </div>
                         </div>
+                    </div>
 
 
                             <div class="mt-4 pt-2 d-flex" style="gap: 10px; width: fit-content;">
@@ -508,6 +508,18 @@ if ($userName != "Prasadini" && !empty($_POST['doubleCheckedBy'])) {
 
             // Run on page load
             toggleStatusFields();
+
+             function toggleReadingsFields() {
+                const readings = document.getElementById('readings').value;
+
+                document.getElementById('l1SupplierField').style.display = 
+                    (readings === "Collected") ? "block" : "none";
+
+                document.getElementById('l1PriceFields').style.display = 
+                    (readings === "Collected") ? "block" : "none";
+            }
+            // Run on page load
+            toggleReadingsFields();
 </script>
 
 

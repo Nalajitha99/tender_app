@@ -1,6 +1,4 @@
 <?php
-require_once('tcpdf/tcpdf.php');
-
 session_start();
 $timeout_duration = 7200;
 
@@ -33,7 +31,9 @@ $startDate = isset($_GET['startDate']) ? $_GET['startDate'] : '';
 $endDate = isset($_GET['endDate']) ? $_GET['endDate'] : '';
 ?>
 
+
 <!DOCTYPE html>
+
 <html>
 <head>
     <meta charset='utf-8'>
@@ -41,9 +41,10 @@ $endDate = isset($_GET['endDate']) ? $_GET['endDate'] : '';
     <title>Powernet Tenders</title>
     <link rel="icon" href="images/logo.ico" type="image/x-icon">
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='css/table.css'>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif;  background:linear-gradient(135deg,#eef2f7,#f9fbfd);}
+         body { font-family: Arial, sans-serif; background:linear-gradient(135deg,#eef2f7,#f9fbfd);}
         #tender-data tr:hover { background-color: #f1f1f1; cursor: pointer; }
         .date-filter { text-align:center; margin-bottom: 20px; }
         .date-filter input { margin: 0 5px; }
@@ -65,9 +66,9 @@ $endDate = isset($_GET['endDate']) ? $_GET['endDate'] : '';
     <ul class="navbar-nav me-auto mb-2 mb-lg-0"> 
         <li class="nav-item"><a class="nav-link active" href="Chart.php" style="font-weight:bold;">Home</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
         <li class="nav-item" ><a class="nav-link active" href="Chart1.php" style="font-weight:bold;">Dashboard</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
-        <li class="nav-item" style="background-color:rgb(255, 255, 255, 0.3);border-radius:10px"><a class="nav-link active" href="OngoingTenderTable.php" style="font-weight:bold;">Ongoing Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+        <li class="nav-item"><a class="nav-link active" href="OngoingTenderTable.php" style="font-weight:bold;">Ongoing Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
         <?php if ($userName == "Prasadini" || $userName == "Admin") { ?> 
-        <li class="nav-item"><a class="nav-link active" href="CheckedTenderTable.php" style="font-weight:bold;">Check Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
+        <li class="nav-item" style="background-color:rgb(255, 255, 255, 0.3);border-radius:10px"><a class="nav-link active" href="CheckedTenderTable.php" style="font-weight:bold;">Check Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
         <?php } ?>
         <li class="nav-item"><a class="nav-link active" href="SubmittedTenderTable.php" style="font-weight:bold;">Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
         <li class="nav-item"><a class="nav-link active" href="UncompletedTenderTable.php" style="font-weight:bold;">Not Submitted Tenders</a></li>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -78,11 +79,9 @@ $endDate = isset($_GET['endDate']) ? $_GET['endDate'] : '';
     <a href="logout.php" class="btn btn-outline-light btn-sm">Logout</a>
 </div>
 </nav>
-
 <br><br>
-
 <div class="container my-3">
-    <h1>Ongoing Tenders</h1>
+    <h1>Submitted Tenders</h1>
 
     <!-- DATE FILTER -->
     <div class="date-filter">
@@ -101,66 +100,66 @@ function printPDF(){
     const startDate = document.getElementById('startDate')?.value || '';
     const endDate = document.getElementById('endDate')?.value || '';
 
-    const url = `PrintOngoing.php?organization=${encodeURIComponent(customer)}&user=${encodeURIComponent(filterUser)}&startDate=${startDate}&endDate=${endDate}`;
+    const url = `PrintSubmitted.php?organization=${encodeURIComponent(customer)}&user=${encodeURIComponent(filterUser)}&startDate=${startDate}&endDate=${endDate}`;
     window.open(url, '_blank');
 }
 </script>
 
     </div>
 
-    <div class="row mb-3">
-        <?php if ($userName == "Admin" || $userName == "Prasadini" || $userName == "Wimal" || $userName == "Chanaka" ) { ?>
-        <div class="col-md-4">
-            <label for="filterByUser" class="form-label">Filter by Assigned Person:</label>
-            <select id="filterByUser" class="form-select" onchange="loadSalesData()">
+<div class="row mb-3">
+    <?php if ($userName == "Admin" || $userName == "Prasadini" || $userName == "Wimal" || $userName == "Chanaka") { ?>
+    <div class="col-md-4">
+        <label for="filterByUser" class="form-label">Filter by Assigned Person:</label>
+        <select id="filterByUser" class="form-select" onchange="loadSalesData()">
                 <option value="">All</option>
+
                 <?php
-                    if (mysqli_num_rows($userResult) > 0) {
-                        while ($row = mysqli_fetch_assoc($userResult)) {
-                            if (strtolower($row['uname']) === "admin" || ($row['uname']) === "Prasadini" || ($row['uname']) === "Wimal" || ($row['uname']) === "Chanaka") {
-                                continue;
-                            }
-                            $display = $row['uname'];
-                            if (!empty($row['department'])) {
-                                $display .= " - " . $row['department'];
-                            }
-                            echo "<option value='" . $row['uname'] . "'>$display</option>";
+                if (mysqli_num_rows($userResult) > 0) {
+                    while ($row = mysqli_fetch_assoc($userResult)) {
+                        if (strtolower($row['uname']) === "admin" || ($row['uname']) === "Prasadini" || ($row['uname']) === "Wimal" || ($row['uname']) === "Chanaka") {
+                                                    continue;
+                                                }
+                        $display = $row['uname'];
+                        if (!empty($row['department'])) {
+                            $display .= " - " . $row['department'];
                         }
+                        echo "<option value='" . $row['uname'] . "'>$display</option>";
                     }
-                    ?>
+                }
+                ?>
             </select>
-        </div>
-        <?php } ?>
-
-        <div class="col-md-4">
-            <label for="searchCustomer" class="form-label">Search by Organization Name:</label>
-            <input type="text" id="searchCustomer" class="form-control" onkeyup="loadSalesData()" placeholder="Enter organization name...">
-        </div>
     </div>
-
-    <div class="table-responsive px-3">
-        <table class="table table-bordered">
-            <thead>
-                <tr class="text-center">
-                    <th>Organization</th>
-                    <th>Location</th>
-                    <th>Tender No</th>
-                    <th>Bid Security</th>
-                    <th>Assigned Person</th>
-                    <th>Closing Date</th>
-                    <th>Assignee Confirmation</th>
-                </tr>
-            </thead>
-            <tbody id="tender-data"></tbody>
-        </table>
+    <?php } ?>
+    <div class="col-md-4">
+        <label for="searchCustomer" class="form-label">Search by Organization Name:</label>
+        <input type="text" id="searchCustomer" class="form-control" onkeyup="loadSalesData()" placeholder="Enter organization name...">
     </div>
+</div>
 
-    <!-- PAGINATION -->
+<div class="table-responsive px-3">
+    <table class="table table-bordered">
+        <thead>
+            <tr class="text-center">
+                <th>Organization</th>
+                <th>Location</th>
+                <th>Tender No</th>
+                <th>Bid Security</th>
+                <th>Assigned Person</th>
+                <th>Closing Date</th>
+            </tr>
+        </thead>
+        <tbody id="tender-data"></tbody>
+    </table>
+</div>
+
+<!-- PAGINATION -->
     <div class="text-center my-3">
         <nav>
             <ul class="pagination justify-content-center" id="pagination"></ul>
         </nav>
     </div>
+
 
 </div>
 
@@ -169,19 +168,19 @@ function printPDF(){
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-let currentPage = 1;
+    let currentPage = 1;
 let startDate = document.getElementById('startDate').value;
 let endDate = document.getElementById('endDate').value;
 
 function loadSalesData(page = 1) {
-    currentPage = page;
+ currentPage = page;
 
     const customer = document.getElementById('searchCustomer')?.value || '';
     const filterUser = document.getElementById('filterByUser')?.value || '';
     startDate = document.getElementById('startDate').value;
     endDate = document.getElementById('endDate').value;
 
-    let url = `OngoingTenderTableDone.php?page=${page}&limit=5&organization=${encodeURIComponent(customer)}&user=${encodeURIComponent(filterUser)}`;
+    let url = `CheckedTenderTableDone.php?page=${page}&limit=5&organization=${encodeURIComponent(customer)}&user=${encodeURIComponent(filterUser)}`;
     if(startDate && endDate) url += `&startDate=${startDate}&endDate=${endDate}`;
 
     fetch(url)
@@ -193,43 +192,6 @@ function loadSalesData(page = 1) {
             data.data.forEach(row => {
                 const tr = document.createElement('tr');
                 tr.className = 'text-center';
-
-              let actionBtn = "";
-
-                // ACCEPT BUTTON LOGIC (unchanged)
-                if (loggedUser === "Admin" || loggedUser === "Prasadini" || loggedUser === "Wimal" || loggedUser === "Chanaka") {
-
-                    if (row.approveStatus === "Accepted") {
-                        actionBtn = `<button class="btn btn-secondary btn-sm" disabled>Accepted</button>`;
-                    } else {
-                        actionBtn = `<button class="btn btn-success btn-sm" disabled>Accept</button>`;
-                    }
-
-                } else {
-
-                    if (row.approveStatus === "Accepted") {
-                        actionBtn = `<button class="btn btn-secondary btn-sm" disabled>Accepted</button>`;
-                    } else {
-                        actionBtn = `<button class="btn btn-success btn-sm" onclick="approveTender(${row.id}, event)">Accept</button>`;
-                    }
-                }
-
-                // DELETE BUTTON — ONLY FOR ADMIN
-                if (loggedUser === "Admin") {
-                    if (row.approveStatus === "Accepted"){
-                        actionBtn += ` 
-                        <button class="btn btn-danger btn-sm ms-2" disabled>
-                        Delete</button>`;
-                    } else {
-                    actionBtn += ` 
-                        <button class="btn btn-danger btn-sm ms-2" 
-                        onclick="deleteTender(${row.id}, event)">
-                        Delete</button>`;
-                    }
-                }
-
-
-
                 tr.innerHTML = `
                     <td>${row.organization}</td>
                     <td>${row.location}</td>
@@ -237,9 +199,8 @@ function loadSalesData(page = 1) {
                     <td>${row.bidSecurity}</td>
                     <td>${row.assignedPerson}</td>
                     <td>${row.closingDate}</td>
-                    <td>${actionBtn}</td>
                 `;
-                tr.onclick = () => window.location.href = `ViewTender.php?id=${row.id}`;
+                tr.onclick = () => window.location.href = `ViewSubmittedTender.php?id=${row.id}`;
                 tbody.appendChild(tr);
             });
 
@@ -285,76 +246,48 @@ function clearFilter() {
 }
 
 document.addEventListener('DOMContentLoaded', loadSalesData);
-
-function approveTender(id, event) {
-    event.stopPropagation();
-
-    if (!confirm("Approve this tender?")) return;
-
-    fetch("ApproveTender.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `id=${id}`
-    })
-    .then(res => res.json())
-    .then(result => {
-        if (result.success) {
-            alert("Tender approved!");
-            loadSalesData(currentPage); // refresh table
-        } else {
-            alert("Error: " + result.error);
-        }
-    })
-    .catch(err => alert("Request failed: " + err));
-}
-  
-    const loggedUser = "<?php echo $userName; ?>";
-
-    function deleteTender(id, event) {
-    event.stopPropagation();
-
-    if (!confirm("Are you sure you want to permanently delete this tender?")) return;
-
-    fetch("DeleteTender.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `id=${id}`
-    })
-    .then(res => res.json())
-    .then(result => {
-        if (result.success) {
-            alert("Tender deleted successfully!");
-            loadSalesData(currentPage);
-        } else {
-            alert("Error: " + result.error);
-        }
-    })
-    .catch(err => alert("Delete failed: " + err));
-}
-
-
-
-
 </script>
-
 <footer style="background:#1f2d3d;color:#fff;" class="mt-auto py-4 px-4 px-xl-5 text-white d-flex justify-content-between align-items-center">
     <div> © 2026 Powernet (pvt) Ltd.<br> All rights reserved.</div>
     <div id="footer-datetime"></div>
 </footer>
 
+
 <script>
-function getFormattedDate() {
+  function getFormattedDate() {
     const date = new Date();
     const day = date.getDate();
     const month = date.toLocaleString('default', { month: 'long' });
     const year = date.getFullYear();
-    const suffix = (d) => { if(d>3 && d<21) return 'th'; switch(d%10){case 1:return 'st'; case 2:return 'nd'; case 3:return 'rd'; default:return 'th';} };
+
+    // Get day suffix (st, nd, rd, th)
+    const suffix = (d) => {
+      if (d > 3 && d < 21) return 'th';
+      switch (d % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+      }
+    };
+
     return `${day}${suffix(day)} ${month} ${year}`;
-}
-function getFormattedTime(){ return new Date().toLocaleTimeString(); }
-function updateFooterDateTime(){ document.getElementById('footer-datetime').innerHTML = `${getFormattedDate()}<br>${getFormattedTime()}`; }
-updateFooterDateTime(); setInterval(updateFooterDateTime,1000);
+  }
+
+  function getFormattedTime() {
+    const date = new Date();
+    return date.toLocaleTimeString(); // Customize if needed
+  }
+
+  function updateFooterDateTime() {
+    document.getElementById('footer-datetime').innerHTML =
+      `${getFormattedDate()}<br>${getFormattedTime()}`;
+  }
+
+  updateFooterDateTime();
+  setInterval(updateFooterDateTime, 1000);
 </script>
+
 
 </body>
 </html>

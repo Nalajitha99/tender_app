@@ -33,7 +33,7 @@ try {
     $response['currentPage'] = $page;
 
     // --- Build WHERE clause --------------------------------------------------
-    $where = "WHERE status = 'Completed' AND checkedByPrasadini = 'Checked'";
+    $where = "WHERE checkedByPrasadini = 'Not Yet'";
 
     // ✔ Organization filter
     if ($organization !== "") {
