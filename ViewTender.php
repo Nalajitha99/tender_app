@@ -133,7 +133,11 @@ if ($userName != "Prasadini" && !empty($_POST['doubleCheckedBy'])) {
     $doubleCheckedBy = $tender['doubleCheckedBy'];
 }
 
+$isAdmin = ($userName == "Admin"); // change to your admin username
+$readonly = $isAdmin ? "" : "readonly";
+$disabled = $isAdmin ? "" : "disabled";
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -160,27 +164,27 @@ if ($userName != "Prasadini" && !empty($_POST['doubleCheckedBy'])) {
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <input type="text" name="organization" class="form-control form-control" 
-                                           value="<?php echo $tender['organization']; ?>" required readonly/>
+                                           value="<?php echo $tender['organization']; ?>" required  <?php echo $readonly; ?>/>
                                     <label>Organization</label>
                                 </div>
 
                                 <div class="col-md-6 mb-4">
                                     <input type="text" name="tenderNo" class="form-control form-control" 
-                                           value="<?php echo $tender['tenderNo']; ?>" required readonly/>
+                                           value="<?php echo $tender['tenderNo']; ?>" required <?php echo $readonly; ?>/>
                                     <label>Tender No</label>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-12 mb-4 pb-2">
-                                    <textarea class="form-control form-control" name="tenderTitle" rows="2" required readonly><?php echo $tender['tenderTitle']; ?></textarea>
+                                    <textarea class="form-control form-control" name="tenderTitle" rows="2" required <?php echo $readonly; ?>><?php echo $tender['tenderTitle']; ?></textarea>
                                     <label>Tender Title</label>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-12 mb-4 pb-2">
-                                    <textarea class="form-control form-control" name="description" rows="3" required readonly><?php echo $tender['description']; ?></textarea>
+                                    <textarea class="form-control form-control" name="description" rows="3" required <?php echo $readonly; ?>><?php echo $tender['description']; ?></textarea>
                                     <label>Tender Description</label>
                                 </div>
                             </div>
@@ -188,7 +192,7 @@ if ($userName != "Prasadini" && !empty($_POST['doubleCheckedBy'])) {
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <input type="text" name="location" class="form-control form-control" 
-                                           value="<?php echo $tender['location']; ?>" required readonly/>
+                                           value="<?php echo $tender['location']; ?>" required <?php echo $readonly; ?>/>
                                     <label>Location</label>
                                 </div>
 
@@ -202,7 +206,7 @@ if ($userName != "Prasadini" && !empty($_POST['doubleCheckedBy'])) {
                             <!-- Bid Security -->
                             <div class="row">
                                 <div class="col-md-6 mb-4">
-                                    <select name="bidSecurity" id="bidSecurity" class="form-select" onchange="showBidSecurity()" readonly>
+                                    <select name="bidSecurity" id="bidSecurity" class="form-select" onchange="showBidSecurity()" <?php echo $readonly; ?>>
                                         <option value="">-- Select --</option>
                                         <option <?php if($tender['bidSecurity']=="Yes") echo 'selected'; ?>>Yes</option>
                                         <option <?php if($tender['bidSecurity']=="No") echo 'selected'; ?>>No</option>
@@ -228,7 +232,7 @@ if ($userName != "Prasadini" && !empty($_POST['doubleCheckedBy'])) {
 
                             <div class="row">
                                 <div class="col-md-4 mb-4">
-                                    <select class="form-control" name="recievedFrom" readonly>
+                                    <select class="form-control" name="recievedFrom" <?php echo $readonly; ?>>
                                         <option <?php if($tender['recievedFrom']=="Post") echo 'selected'; ?>>Post</option>
                                         <option <?php if($tender['recievedFrom']=="Email") echo 'selected'; ?>>Email</option>
                                         <option <?php if($tender['recievedFrom']=="News Paper") echo 'selected'; ?>>News Paper</option>
@@ -239,18 +243,18 @@ if ($userName != "Prasadini" && !empty($_POST['doubleCheckedBy'])) {
 
                                 <div class="col-md-4 mb-4">
                                     <input type="date" name="recievedDate" class="form-control form-control" 
-                                           value="<?php echo $tender['recievedDate']; ?>" readonly/>
+                                           value="<?php echo $tender['recievedDate']; ?>" <?php echo $readonly; ?>/>
                                     <label>Received Date</label>
                                 </div>
                                 <div class="col-md-4 mb-4">
-                                        <input type="text" id="recievedTime" name="recievedTime" class="form-control form-control" value="<?php echo date("g:i A", strtotime($tender['recievedTime'])); ?>" readonly/>
+                                        <input type="text" id="recievedTime" name="recievedTime" class="form-control form-control" value="<?php echo date("g:i A", strtotime($tender['recievedTime'])); ?>" <?php echo $readonly; ?>/>
                                         <label class="form-label" for="recievedTime">Tender Recieved Time</label>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-4 mb-4">
-                                     <select class="select form-control" id="assignedBy" name="assignedBy" required readonly>
+                                     <select class="select form-control" id="assignedBy" name="assignedBy" required <?php echo $readonly; ?>>
                                         <!-- <option value="" disabled>Select Assigned Person</option> -->
 
                                     <?php
@@ -275,12 +279,12 @@ if ($userName != "Prasadini" && !empty($_POST['doubleCheckedBy'])) {
 
                                 <div class="col-md-4 mb-4">
                                     <input type="date" name="assignedDate" class="form-control form-control" 
-                                           value="<?php echo $tender['assignedDate']; ?>"readonly />
+                                           value="<?php echo $tender['assignedDate']; ?>" <?php echo $readonly; ?>/>
                                     <label>Tender Assigned Date</label>
                                 </div>
 
                                 <div class="col-md-4 mb-4">
-                                        <input type="text" id="assignedTime" name="assignedTime" class="form-control form-control" value="<?php echo date("g:i A", strtotime($tender['assignedTime'])); ?>" readonly/>
+                                        <input type="text" id="assignedTime" name="assignedTime" class="form-control form-control" value="<?php echo date("g:i A", strtotime($tender['assignedTime'])); ?>" <?php echo $readonly; ?>/>
                                         <label class="form-label" for="assignedTime">Tender Assigned Time</label>
                                 </div>
                                 

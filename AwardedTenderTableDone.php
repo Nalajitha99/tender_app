@@ -61,7 +61,7 @@ try {
                 tenderNo,
                 bidSecurity,
                 assignedBy AS assignedPerson,
-                closingDate
+                closingDate,
                 awardStatus
             FROM tenders
             {$where}

@@ -346,7 +346,7 @@ if (isset($_POST['update'])) {
                         
                         <div class="row">
                             <div class="col-md-4 mb-4">
-                                <select class="form-control" name="readings" id="readings" onchange="toggleReadingFields()" readonly>
+                                <select class="form-control" name="readings" id="readings" onchange="toggleReadingFields()">
                                     <option value="" <?php if($tender['readings']=="") echo 'selected'; ?>></option>
                                     <option value="Collected" <?php if($tender['readings']=="Collected") echo 'selected'; ?>>Collected</option>
                                     <option value="NotCollected" <?php if($tender['readings']=="NotCollected") echo 'selected'; ?>>Not Collected</option>
@@ -359,7 +359,7 @@ if (isset($_POST['update'])) {
                         <div class="row" id="yField">
                             <div class="col-md-8 mb-4">
                                 <input type="text" name="l1supplier" class="form-control form-control" 
-                                    value="<?php echo $tender['l1supplier']; ?>" readonly/>
+                                    value="<?php echo $tender['l1supplier']; ?>"/>
                                 <label>L1 Supplier</label>
                             </div>
                         </div>
@@ -369,13 +369,13 @@ if (isset($_POST['update'])) {
                             <div class="row">
                                 <div class="col-md-4 mb-4">
                                     <input type="text" name="l1price" class="form-control form-control" 
-                                        value="<?php echo $tender['l1price']; ?>" readonly/>
+                                        value="<?php echo $tender['l1price']; ?>"/>
                                     <label>L1 Price</label>
                                 </div>
 
                                 <div class="col-md-4 mb-4">
                                     <input type="text" name="ourPrice" class="form-control form-control" 
-                                        value="<?php echo $tender['ourprice']; ?>" readonly/>
+                                        value="<?php echo $tender['ourprice']; ?>" />
                                     <label>Our Price</label>
                                 </div>
                             </div>
@@ -425,10 +425,11 @@ if (isset($_POST['update'])) {
                                             type="checkbox"
                                             name="checked"
                                             id="checked"
-                                            <?php if ($tender['checkedByPrasadini'] === "Checked") echo "checked disabled"; ?>>
+                                            <?php if ($tender['checkedByPrasadini'] === "Checked") echo "checked readonly"; ?>>
 
                                         <label class="form-check-label">
-                                            <?php echo $tender['checkedByPrasadini']; ?>
+                                            <?php if ($tender['checkedByPrasadini'] === "Not Yet") echo "Check"; 
+                                            else echo "Checked"; ?>
                                         </label>
                                     </div>
                                 </div>
